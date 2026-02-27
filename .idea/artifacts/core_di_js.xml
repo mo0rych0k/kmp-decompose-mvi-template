@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="core-di-js">
+    <output-path>$PROJECT_DIR$/common/core-di/build/libs</output-path>
+    <root id="archive" name="core-di-js.jar">
+      <element id="module-output" name="kmp-decompose-mvi-template.common.core-di.jsMain" />
+    </root>
+  </artifact>
+</component>
