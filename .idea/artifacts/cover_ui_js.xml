@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="cover-ui-js">
-    <output-path>$PROJECT_DIR$/features/cover/cover-ui/build/libs</output-path>
-    <root id="archive" name="cover-ui-js.jar">
-      <element id="module-output" name="kmp-decompose-mvi-template.features.cover.cover-ui.jsMain" />
-    </root>
-  </artifact>
-</component>

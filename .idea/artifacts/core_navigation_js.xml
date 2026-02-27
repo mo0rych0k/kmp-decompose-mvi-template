@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="core-navigation-js">
-    <output-path>$PROJECT_DIR$/common/core-navigation/build/libs</output-path>
-    <root id="archive" name="core-navigation-js.jar">
-      <element id="module-output" name="kmp-decompose-mvi-template.common.core-navigation.jsMain" />
-    </root>
-  </artifact>
-</component>

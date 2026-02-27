@@ -1,0 +1,48 @@
+# --- Android Studio & IntelliJ ---
+.idea/
+*.iml
+*.iws
+.gradle/
+build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aar
+
+# --- Kotlin Multiplatform & Compose ---
+.kotlin/
+composeApp/build/
+shared/build/
+*/build/
+
+# --- iOS (Xcode & CocoaPods/SwiftPM) ---
+iosApp/iosApp.xcodeproj/project.xcworkspace/
+iosApp/iosApp.xcodeproj/xcuserdata/
+iosApp/iosApp.xcworkspace/
+.lock-w0p
+DerivedData/
+*.moved-aside
+*.xcuserstate
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+
+# CocoaPods (якщо використовуєте)
+iosApp/Pods/
+Podfile.lock
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Secrets ---
+*.jks
+*.p12
+*.key
+*.keystore
+secrets.properties

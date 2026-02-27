@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="uikit-jvm">
-    <output-path>$PROJECT_DIR$/common/uikit/build/libs</output-path>
-    <root id="archive" name="uikit-jvm.jar">
-      <element id="module-output" name="kmp-decompose-mvi-template.common.uikit.jvmMain" />
-    </root>
-  </artifact>
-</component>
