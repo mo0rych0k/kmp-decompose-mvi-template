@@ -15,10 +15,10 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import io.pylyp.core.di.ComponentFactory
-import io.pylyp.core.di.IsolatedKoinContext
 import io.pylyp.cover.ui.di.createCoverRootComponent
 import io.pylyp.cover.ui.screens.cover.CoverScreen
+import io.pylyp.network.core.di.ComponentFactory
+import io.pylyp.network.core.di.IsolatedKoinContext
 import org.koin.compose.KoinIsolatedContext
 import org.koin.compose.koinInject
 
@@ -38,12 +38,11 @@ public fun CoverRootMain(
                     .fillMaxSize(),
             ) {
                 when (val child = it.instance) {
-                    is CoverRootComponent.Child.Cover ->
-                        CoverScreen(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            component = child.component,
-                        )
+                    is Cover -> CoverScreen(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        component = child.component,
+                    )
                 }
             }
         }

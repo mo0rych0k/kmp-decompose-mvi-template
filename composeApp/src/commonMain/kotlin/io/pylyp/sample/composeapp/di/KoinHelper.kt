@@ -1,6 +1,6 @@
 package io.pylyp.sample.composeapp.di
 
-import io.pylyp.core.di.IsolatedKoinContext
+import io.pylyp.network.core.di.IsolatedKoinContext
 import org.koin.dsl.KoinAppDeclaration
 
 
@@ -11,6 +11,6 @@ public fun initKoin(additionalInitialization: KoinAppDeclaration = {}) {
     )
 }
 
-public fun iOsInitKoin() {
+public fun initKoinInPlatform() {
     initKoin { }
 }

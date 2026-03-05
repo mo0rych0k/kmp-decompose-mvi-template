@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
     alias(libs.plugins.app.composeMultiplatform)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinxSerialization)
 }
 
@@ -27,17 +28,31 @@ kotlin {
 
         }
         commonMain.dependencies {
+            /*common*/
             implementation(projects.common.uikit)
             implementation(projects.common.coreNavigation)
             implementation(projects.common.coreDi)
+            implementation(projects.common.coreNetwork)
+            implementation(projects.common.coreThreading)
+            implementation(projects.common.persistence.persistenceDatabase)
+
+            /*feature-cover*/
             implementation(projects.features.cover.coverUi)
+
+            /*feature-coffee*/
+            implementation(projects.features.coffee.coffeeData)
+            implementation(projects.features.coffee.coffeeDataNetwork)
+            implementation(projects.features.coffee.coffeeDomain)
+            implementation(projects.features.coffee.coffeeUi)
+
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
+
         }
     }
 }
@@ -52,4 +67,10 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+tasks.register("jvmRun") {
+    group = "application"
+    description = "Alias to run the Compose Desktop app (delegates to 'run')"
+    dependsOn("run")
 }

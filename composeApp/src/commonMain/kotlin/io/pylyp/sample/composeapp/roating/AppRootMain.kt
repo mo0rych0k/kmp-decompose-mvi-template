@@ -15,9 +15,9 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import io.pylyp.core.di.ComponentFactory
-import io.pylyp.core.di.IsolatedKoinContext
 import io.pylyp.cover.ui.roating.CoverRootMain
+import io.pylyp.network.core.di.ComponentFactory
+import io.pylyp.network.core.di.IsolatedKoinContext
 import io.pylyp.sample.composeapp.di.createAppRootComponent
 import org.koin.compose.KoinIsolatedContext
 import org.koin.compose.koinInject

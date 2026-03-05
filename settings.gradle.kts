@@ -37,8 +37,21 @@ dependencyResolutionManagement {
 include(":androidApp")
 include(":composeApp")
 include(":server")
-include(":common:uikit")
-include(":common:core-navigation")
-include(":common:core-di")
+
+include(
+    ":common:core-di",
+    ":common:core-navigation",
+    ":common:core-network",
+    ":common:core-threading",
+    ":common:uikit",
+)
+
 include(":features:cover:cover-ui")
 
+include(
+    ":features:coffee:coffee-data",
+    ":features:coffee:coffee-data-network",
+    ":features:coffee:coffee-domain",
+    ":features:coffee:coffee-ui",
+)
+include(":common:persistence:persistence-database")

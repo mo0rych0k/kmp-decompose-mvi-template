@@ -3,7 +3,7 @@ package io.pylyp.sample.composeapp.di
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import io.pylyp.core.di.ComponentFactory
+import io.pylyp.network.core.di.ComponentFactory
 import io.pylyp.sample.composeapp.roating.AppRootComponent
 import io.pylyp.sample.composeapp.roating.DefaultAppRootComponent
 import org.koin.core.component.get

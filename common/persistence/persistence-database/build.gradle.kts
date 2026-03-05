@@ -1,0 +1,46 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
+plugins {
+    alias(libs.plugins.app.kotlinMultiplatform)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kotlinxSerialization)
+}
+
+kotlin {
+    androidLibrary {
+        namespace = "io.pylyp.common.core.persistence.db"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+    }
+
+    sourceSets {
+        all {
+            languageSettings {
+                @OptIn(ExperimentalKotlinGradlePluginApi::class)
+                compilerOptions {
+                    freeCompilerArgs.add("-Xexpect-actual-classes")
+                }
+            }
+        }
+
+        commonMain.dependencies {
+            implementation(projects.common.coreDi)
+            implementation(projects.common.coreThreading)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.serialization)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.room.sqlite.wrapper)
+        }
+    }
+}
+
+dependencies {
+    ksp(libs.androidx.room.compiler)
+}
+
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}

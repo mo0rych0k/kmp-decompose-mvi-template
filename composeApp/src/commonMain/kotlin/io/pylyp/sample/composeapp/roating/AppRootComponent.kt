@@ -5,9 +5,9 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import io.pylyp.core.di.ComponentFactory
 import io.pylyp.cover.ui.di.createCoverRootComponent
 import io.pylyp.cover.ui.roating.CoverRootComponent
+import io.pylyp.network.core.di.ComponentFactory
 import kotlinx.serialization.Serializable
 
 internal interface AppRootComponent {
