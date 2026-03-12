@@ -19,5 +19,7 @@ internal val appModules: List<Module> = listOf(
     coffeeDataModule,
     coffeeDataNetworkModule,
     coffeeDomainModule,
-
+    platformModule,
 )
+
+internal expect val platformModule: Module

@@ -29,6 +29,7 @@ kotlin {
         }
         commonMain.dependencies {
             /*common*/
+            implementation(projects.common.appInfo)
             implementation(projects.common.uikit)
             implementation(projects.common.coreNavigation)
             implementation(projects.common.coreDi)

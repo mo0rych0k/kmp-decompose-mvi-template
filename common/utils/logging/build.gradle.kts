@@ -1,19 +1,16 @@
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
-    alias(libs.plugins.app.composeMultiplatform)
 }
 
 kotlin {
     androidLibrary {
-        namespace = "io.pylyp.common.core.di"
+        namespace = "io.pylyp.utils.logging"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.common.appInfo)
-            api(libs.koin.core)
-            api(libs.koin.compose)
+            implementation(projects.common.coreDi)
         }
     }
 }

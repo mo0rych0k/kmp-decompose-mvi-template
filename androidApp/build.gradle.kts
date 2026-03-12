@@ -46,6 +46,7 @@ project.extensions.configure<ApplicationExtension> {
 }
 
 dependencies {
+    implementation(projects.common.appInfo)
     implementation(projects.composeApp)
     implementation(projects.common.coreDi)
     implementation(projects.common.uikit)

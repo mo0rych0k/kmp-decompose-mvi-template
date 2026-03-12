@@ -56,3 +56,6 @@ include(
 )
 include(":common:persistence:persistence-database")
 include(":common:core-domain")
+include(":common:utils:logging")
+include(":common:utils:logging-impl")
+include(":common:app-info")

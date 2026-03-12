@@ -41,6 +41,7 @@ googleMaterial = "1.13.0"
 room = "2.8.4"
 sqlite = "2.6.2"
 ksp = "2.3.5"
+kermit = "2.1.0"
 
 [libraries]
 #Tests
@@ -111,6 +112,7 @@ decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decom
 decompose-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 decompose-extensions-compose-experimental = { module = "com.arkivanov.decompose:extensions-compose-experimental", version.ref = "decompose" }
 
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 kotlinter = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinter" }
@@ -129,8 +131,6 @@ kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-
 # Build logic dependencies
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
