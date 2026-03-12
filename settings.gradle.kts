@@ -55,3 +55,4 @@ include(
     ":features:coffee:coffee-ui",
 )
 include(":common:persistence:persistence-database")
+include(":common:core-domain")

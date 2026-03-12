@@ -4,7 +4,7 @@ import io.pylyp.coffee.data.mappers.toDomain
 import io.pylyp.coffee.data.mappers.toStorage
 import io.pylyp.coffee.data.network.CoffeeRemoteDataSource
 import io.pylyp.coffee.domain.entity.CoffeeImageDD
-import io.pylyp.coffee.domain.repositories.CoffeeRepository
+import io.pylyp.coffee.domain.repository.CoffeeRepository
 import io.pylyp.common.core.persistence.CoffeeImagesStorage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

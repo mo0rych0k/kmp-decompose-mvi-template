@@ -5,22 +5,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import io.pylyp.cover.ui.di.createCoverRootComponent
+import io.pylyp.common.core.di.IsolatedKoinContext
 import io.pylyp.cover.ui.screens.cover.CoverScreen
-import io.pylyp.network.core.di.ComponentFactory
-import io.pylyp.network.core.di.IsolatedKoinContext
 import org.koin.compose.KoinIsolatedContext
-import org.koin.compose.koinInject
 
 @Composable
 public fun CoverRootMain(
@@ -29,6 +23,7 @@ public fun CoverRootMain(
 ) {
     KoinIsolatedContext(context = IsolatedKoinContext.koinApplication()) {
         val stack = component.stack.subscribeAsState()
+
         Box(modifier = modifier) {
             Children(
                 stack = stack.value,
@@ -46,15 +41,5 @@ public fun CoverRootMain(
                 }
             }
         }
-    }
-}
-
-@Composable
-public fun rememberCoverRootComponent(): CoverRootComponent {
-    val componentFactory = koinInject<ComponentFactory>()
-    return remember {
-        componentFactory.createCoverRootComponent(
-            componentContext = DefaultComponentContext(lifecycle = LifecycleRegistry()),
-        )
     }
 }

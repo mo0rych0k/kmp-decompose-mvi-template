@@ -13,9 +13,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.ktor)
+
             implementation(projects.common.uikit)
             implementation(projects.common.coreNavigation)
             implementation(projects.common.coreDi)
+
+            implementation(projects.features.coffee.coffeeDomain)
         }
     }
 }

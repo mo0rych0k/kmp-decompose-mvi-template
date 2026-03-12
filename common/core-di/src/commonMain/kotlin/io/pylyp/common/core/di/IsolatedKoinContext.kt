@@ -1,4 +1,4 @@
-package io.pylyp.network.core.di
+package io.pylyp.common.core.di
 
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
@@ -37,3 +37,4 @@ public object IsolatedKoinContext {
     }
 
 }
+

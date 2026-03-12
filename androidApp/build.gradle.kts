@@ -49,6 +49,7 @@ dependencies {
     implementation(projects.composeApp)
     implementation(projects.common.coreDi)
     implementation(projects.common.uikit)
+    implementation(projects.common.coreNavigation)
     implementation(libs.koin.android)
     implementation(libs.androidx.activity.compose)
 }

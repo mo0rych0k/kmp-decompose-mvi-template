@@ -3,7 +3,7 @@ package io.pylyp.sample.composeapp.di
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import io.pylyp.network.core.di.ComponentFactory
+import io.pylyp.common.core.di.ComponentFactory
 import io.pylyp.sample.composeapp.roating.AppRootComponent
 import io.pylyp.sample.composeapp.roating.DefaultAppRootComponent
 import org.koin.core.component.get
@@ -14,7 +14,7 @@ public val appNavigationModule: Module = module {
     factory<StoreFactory> { DefaultStoreFactory() }
 }
 
-internal fun ComponentFactory.createAppRootComponent(
+public fun ComponentFactory.createAppRootComponent(
     componentContext: ComponentContext,
 ): AppRootComponent {
     return DefaultAppRootComponent(

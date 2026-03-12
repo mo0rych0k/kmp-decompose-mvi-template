@@ -34,6 +34,9 @@ internal class CoverStoreFactory(
             when (intent) {
                 is CoverStore.Intent.BackPressedIntent ->
                     publish(label = CoverStore.Label.BackPressedLabel)
+
+                CoverStore.Intent.OnNavigateToCoffeeIntent ->
+                    publish(label = CoverStore.Label.OnNavigateToCoffeeLabel)
             }
         }
 

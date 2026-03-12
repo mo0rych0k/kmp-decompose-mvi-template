@@ -1,4 +1,4 @@
-package io.pylyp.coffee.domain.repositories
+package io.pylyp.coffee.domain.repository
 
 import io.pylyp.coffee.domain.entity.CoffeeImageDD
 import kotlinx.coroutines.flow.Flow

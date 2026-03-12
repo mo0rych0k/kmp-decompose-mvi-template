@@ -4,11 +4,12 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import io.pylyp.common.core.di.ComponentFactory
+import io.pylyp.core.navigation.AppFeature
 import io.pylyp.core.navigation.asValue
 import io.pylyp.core.navigation.subscribe
 import io.pylyp.cover.ui.di.createCoverStore
 import io.pylyp.cover.ui.screens.cover.store.CoverStore
-import io.pylyp.network.core.di.ComponentFactory
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.KoinComponent
 
@@ -20,6 +21,8 @@ internal interface CoverComponent {
 internal class DefaultCoverComponent(
     componentContext: ComponentContext,
     componentFactory: ComponentFactory,
+    onCloseFeature: () -> Unit,
+    onNavigateToFeature: (appFeature: AppFeature) -> Unit,
 ) : ComponentContext by componentContext, CoverComponent, KoinComponent {
 
     private val store: CoverStore = instanceKeeper.getStore { componentFactory.createCoverStore() }
@@ -33,7 +36,8 @@ internal class DefaultCoverComponent(
             scope = componentScope,
         ) { label ->
             when (label) {
-                CoverStore.Label.BackPressedLabel -> TODO()
+                CoverStore.Label.BackPressedLabel -> onCloseFeature.invoke()
+                CoverStore.Label.OnNavigateToCoffeeLabel -> onNavigateToFeature(AppFeature.Coffee)
             }
         }
     }

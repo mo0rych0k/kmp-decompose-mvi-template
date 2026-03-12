@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "io.pylyp.core.di"
+        namespace = "io.pylyp.common.core.di"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
