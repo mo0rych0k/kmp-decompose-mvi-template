@@ -42,6 +42,8 @@ room = "2.8.4"
 sqlite = "2.6.2"
 ksp = "2.3.5"
 kermit = "2.1.0"
+appcompatVersion = "1.7.1"
+googleMaterialVersion = "1.13.0"
 
 [libraries]
 #Tests
@@ -131,6 +133,8 @@ kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-
 # Build logic dependencies
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
+material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterialVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

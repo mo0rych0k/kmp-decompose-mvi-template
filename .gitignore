@@ -46,3 +46,20 @@ Thumbs.db
 *.key
 *.keystore
 secrets.properties
+
+.env
+*.secret
+
+# AI Agent Memory & Logs
+/logs/
+/memory/*.json
+/sessions/
+
+# Vector DB (local)
+.chroma/
+/vector_storage/
+
+# Python environment
+__pycache__/
+venv/
+.venv/
