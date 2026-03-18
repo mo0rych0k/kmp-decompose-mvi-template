@@ -14,7 +14,7 @@ import io.pylyp.coffee.ui.screens.gallery.store.GalleryStore.Label.OpenDetailsLa
 import io.pylyp.coffee.ui.screens.gallery.store.GalleryStoreFactory.Message.CoffeeListLoadedMessage
 import io.pylyp.coffee.ui.screens.gallery.store.GalleryStoreFactory.Message.IsLoadingMessage
 import io.pylyp.coffee.ui.screens.gallery.store.GalleryStoreFactory.Message.SelectVisibleItemMessage
-import io.pylyp.common.core.domain.Resource
+import io.pylyp.common.core.foundation.entity.Resource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

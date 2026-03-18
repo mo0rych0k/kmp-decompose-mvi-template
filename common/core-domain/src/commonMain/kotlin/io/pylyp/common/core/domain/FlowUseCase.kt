@@ -1,5 +1,6 @@
 package io.pylyp.common.core.domain
 
+import io.pylyp.common.core.foundation.entity.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

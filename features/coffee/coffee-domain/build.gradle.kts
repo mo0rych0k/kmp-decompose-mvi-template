@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization)
-            implementation(projects.common.coreDi)
+            api(projects.common.coreDi)
             implementation(projects.common.coreNetwork)
             implementation(projects.common.coreDomain)
         }

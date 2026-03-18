@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_generic_title">Error</string>
+    <string name="error_generic_message">An unknown error occurred. Please try again.</string>
+    <string name="error_dialog_retry_button">Retry</string>
+    <string name="error_dialog_close_button">Close</string>
+
+    <string name="error_network_title">Connection Error</string>
+    <string name="error_network_message">Unable to connect. Please check your internet connection and try again.</string>
+
+    <string name="error_timeout_title">Request Timeout</string>
+    <string name="error_timeout_message">The server took too long to respond. Please try again later.</string>
+
+    <string name="error_server_title">Server Error</string>
+    <string name="error_server_message">Something went wrong on the server. Please try again later.</string>
+
+    <string name="error_serialization_title">Data Error</string>
+    <string name="error_serialization_message">Failed to process server response. Please try again or update the app.</string>
+
+    <string name="error_ssl_title">Security Error</string>
+    <string name="error_ssl_message">A secure connection could not be established. Please check your network settings.</string>
+
+    <string name="error_file_title">File Error</string>
+    <string name="error_file_message">Failed to read or write data. Please check available storage and try again.</string>
+</resources>

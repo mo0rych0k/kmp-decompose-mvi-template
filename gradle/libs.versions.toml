@@ -119,7 +119,7 @@ decompose-extensions-compose-experimental = { module = "com.arkivanov.decompose:
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 kotlinter = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinter" }
 compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 gradle-android-cache-fix = { module = "org.gradle.android.cache-fix:org.gradle.android.cache-fix.gradle.plugin", version.ref = "gradle-android-cache-fix" }

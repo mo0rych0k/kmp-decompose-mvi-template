@@ -1,8 +1,11 @@
 package io.pylyp.common.core.ui.mapper
 
+import io.pylyp.common.uikit.entity.UiError
+
 public object DefaultErrorMapper {
-    // TODO add mapper error
-//    public fun mapError(error: Throwable): UiError {
-//        return mapErrorPlatform(error)
-//    }
+
+    public fun mapError(error: Throwable): UiError {
+        return mapErrorPlatform(error)
+    }
+
 }

@@ -1,4 +1,4 @@
-package io.pylyp.common.core.domain
+package io.pylyp.common.core.foundation.entity
 
 public sealed interface Resource<out T> {
     public data object Idle : Resource<Nothing>
@@ -6,6 +6,6 @@ public sealed interface Resource<out T> {
     public data class Success<out T>(val data: T) : Resource<T>
     public data class Error(
         val message: String,
-        val throwable: Throwable? = null
+        val throwable: Throwable? = null,
     ) : Resource<Nothing>
 }

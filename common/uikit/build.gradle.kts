@@ -29,6 +29,8 @@ kotlin {
             api(libs.compose.ui)
             api(libs.compose.uiToolingPreview)
 
+            api(projects.common.coreFoundation)
+
             implementation(libs.coil.compose)
             implementation(libs.coil.ktor)
             implementation(libs.coil.svg)

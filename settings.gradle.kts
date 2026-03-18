@@ -44,8 +44,15 @@ include(
     ":common:core-network",
     ":common:core-threading",
     ":common:core-threading-test",
+    ":common:core-domain",
+    ":common:core-ui",
+    ":common:resources",
     ":common:testkit",
     ":common:uikit",
+    ":common:utils:logging",
+    ":common:utils:logging-impl",
+    ":common:app-info",
+    ":common:persistence:persistence-database",
 )
 
 include(":features:cover:cover-ui")
@@ -56,9 +63,6 @@ include(
     ":features:coffee:coffee-domain",
     ":features:coffee:coffee-ui",
 )
-include(":common:persistence:persistence-database")
-include(":common:core-domain")
-include(":common:utils:logging")
-include(":common:utils:logging-impl")
-include(":common:app-info")
-include(":common:core-ui")
+
+
+include(":common:core-foundation")

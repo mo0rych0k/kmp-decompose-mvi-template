@@ -7,6 +7,6 @@ import org.jetbrains.compose.resources.DrawableResource
 public data class UiError(
     val title: PrintableText,
     val description: PrintableText?,
-    val image: DrawableResource,
+    val image: DrawableResource?,
     val cause: Throwable,
 )

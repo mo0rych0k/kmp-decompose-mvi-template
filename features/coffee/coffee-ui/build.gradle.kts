@@ -16,7 +16,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.ktor)
 
-            implementation(projects.common.uikit)
+            implementation(projects.common.coreUi)
             implementation(projects.common.coreNavigation)
             implementation(projects.common.coreDi)
 
