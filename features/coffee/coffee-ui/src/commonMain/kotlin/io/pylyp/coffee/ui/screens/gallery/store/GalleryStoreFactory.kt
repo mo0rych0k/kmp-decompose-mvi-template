@@ -89,8 +89,8 @@ internal class GalleryStoreFactory(
 
             jobFetchNewPageUseCase?.cancel()
 
-            val job = fetchNewPageUseCase(Unit)
-                .onEach { resource ->
+            val job = fetchNewPageUseCase(parameters = Unit)
+                .onEach { resource: Resource<Unit> ->
                     dispatch(message = IsLoadingMessage(isLoading = resource is Resource.Loading))
                 }
                 .launchIn(scope)

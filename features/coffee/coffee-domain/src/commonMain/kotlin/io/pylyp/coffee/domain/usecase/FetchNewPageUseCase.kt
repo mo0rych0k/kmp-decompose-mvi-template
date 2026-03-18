@@ -5,7 +5,7 @@ import io.pylyp.common.core.domain.SuspendUseCase
 
 public class FetchNewPageUseCase(
     private val repository: CoffeeRepository,
-) : SuspendUseCase<Unit>() {
+) : SuspendUseCase<Unit, Unit>() {
     override suspend fun execute(parameters: Unit) {
         repository.fetchNewPackImages()
     }
