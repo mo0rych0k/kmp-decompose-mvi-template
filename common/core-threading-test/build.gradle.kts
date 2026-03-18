@@ -4,13 +4,16 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "io.pylyp.common.core.domain"
+        namespace = "io.pylyp.core.threading.test"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(projects.common.coreDi)
+            implementation(projects.common.coreThreading)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
+

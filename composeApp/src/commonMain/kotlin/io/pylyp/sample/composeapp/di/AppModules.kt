@@ -1,5 +1,6 @@
 package io.pylyp.sample.composeapp.di
 
+import io.pylyp.api.core.di.networkEngineModule
 import io.pylyp.api.core.di.networkModule
 import io.pylyp.coffee.data.di.coffeeDataModule
 import io.pylyp.coffee.data.network.di.coffeeDataNetworkModule
@@ -11,6 +12,7 @@ import org.koin.core.module.Module
 
 internal val appModules: List<Module> = listOf(
     networkModule,
+    networkEngineModule,
     appNavigationModule,
     coreThreadingModule,
     persistenceDatabaseModule,

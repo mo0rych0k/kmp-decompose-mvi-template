@@ -2,7 +2,7 @@ package io.pylyp.api.core.client
 
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -11,7 +11,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-public fun createHttpClient(engine: HttpClientEngineFactory<*>): HttpClient {
+public fun createHttpClient(engine: HttpClientEngine): HttpClient {
     return HttpClient(engine) {
         install(ContentNegotiation) {
             json(Json {

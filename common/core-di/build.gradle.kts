@@ -15,5 +15,9 @@ kotlin {
             api(libs.koin.core)
             api(libs.koin.compose)
         }
+
+        commonTest.dependencies {
+            implementation(projects.common.coreThreadingTest)
+        }
     }
 }

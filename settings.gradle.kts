@@ -43,6 +43,8 @@ include(
     ":common:core-navigation",
     ":common:core-network",
     ":common:core-threading",
+    ":common:core-threading-test",
+    ":common:testkit",
     ":common:uikit",
 )
 

@@ -44,6 +44,7 @@ ksp = "2.3.5"
 kermit = "2.1.0"
 appcompatVersion = "1.7.1"
 googleMaterialVersion = "1.13.0"
+turbine = "1.2.1"
 
 [libraries]
 #Tests
@@ -96,6 +97,7 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
@@ -115,6 +117,7 @@ decompose-compose = { module = "com.arkivanov.decompose:extensions-compose", ver
 decompose-extensions-compose-experimental = { module = "com.arkivanov.decompose:extensions-compose-experimental", version.ref = "decompose" }
 
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 kotlinter = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinter" }
