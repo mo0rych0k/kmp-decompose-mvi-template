@@ -1,0 +1,34 @@
+---
+description: Data-network rules (remote data sources + Ktor + dispatchers)
+globs: features/**/*-data-network/**
+alwaysApply: false
+---
+
+# Data-Network Layer: Remote Data Sources
+
+## 1) Define contracts + implementations in data-network
+- `*-data-network` must define:
+  - `interface *RemoteDataSource`
+  - and its implementation (e.g. `*RemoteDataSourceImpl`)
+- Data-network must not depend on UI/Compose.
+
+## 2) HTTP execution must be off the main thread
+- All network calls must be wrapped with the shared dispatcher abstraction (`DispatcherProvider`):
+  - `withContext(dispatcherProvider.IO) { ... httpClient ... }`
+- Avoid hardcoding `Dispatchers.IO`.
+
+## 3) Use Ktor client + serialization directly
+- Prefer typed Ktor flows:
+  - `httpClient.get(url).body<SomeDTO>()` (or `.body()` when type is inferred)
+- Response DTOs/entities should be `@Serializable` and live in the data-network module.
+
+## 4) Error handling strategy
+- Default: let exceptions propagate from remote calls.
+  - Use-cases (via `SuspendUseCase` / `FlowUseCase`) will map them into `Resource.Error`.
+- Only swallow errors if you implement an explicit “best-effort / partial success” contract at the remote level.
+
+## 5) DI registration
+- Register remote data sources in Koin for the corresponding feature/data-network module.
+- Use explicit bindings:
+  - `factoryOf(::SomeRemoteDataSourceImpl) bind SomeRemoteDataSource::class`
+
