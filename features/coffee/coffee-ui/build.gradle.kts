@@ -17,9 +17,6 @@ kotlin {
             implementation(libs.coil.ktor)
 
             implementation(projects.common.coreUi)
-            implementation(projects.common.coreNavigation)
-            implementation(projects.common.coreDi)
-
             implementation(projects.features.coffee.coffeeDomain)
         }
     }

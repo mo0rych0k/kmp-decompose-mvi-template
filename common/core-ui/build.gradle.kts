@@ -13,9 +13,11 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.components.resources)
-            implementation(projects.common.coreDi)
             api(projects.common.uikit)
             api(projects.common.resources)
+            api(projects.common.coreDi)
+            api(projects.common.coreFoundation)
+            api(projects.common.coreNavigation)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

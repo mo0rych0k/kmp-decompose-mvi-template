@@ -10,9 +10,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.serialization)
-            api(projects.common.coreDi)
-            implementation(projects.common.coreNetwork)
             implementation(projects.common.coreDomain)
         }
     }
