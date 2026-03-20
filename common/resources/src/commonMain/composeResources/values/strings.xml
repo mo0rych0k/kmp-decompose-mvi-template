@@ -22,4 +22,43 @@
 
     <string name="error_file_title">File Error</string>
     <string name="error_file_message">Failed to read or write data. Please check available storage and try again.</string>
+
+    <!-- Observation history -->
+    <string name="observation_history_title">Observation history</string>
+    <string name="observation_empty_title">No records</string>
+    <string name="observation_empty_description">Add your first observation</string>
+    <string name="nav_calendar">Calendar</string>
+    <string name="location_unknown">Location unknown</string>
+    <string name="status_large_difference">Large difference</string>
+    <string name="label_temperature">Temperature</string>
+    <string name="label_vs">vs</string>
+    <string name="label_difference">Difference</string>
+
+    <!-- New observation -->
+    <string name="screen_new_observation_title">New observation</string>
+    <string name="header_now">Now</string>
+    <string name="header_loading">Loading…</string>
+    <string name="label_wind_direction">Wind direction</string>
+    <string name="wind_north">North (N)</string>
+    <string name="label_humidity">Humidity</string>
+    <string name="label_weather_type">Weather type</string>
+    <string name="weather_sunny">Sunny</string>
+    <string name="weather_cloudy">Cloudy</string>
+    <string name="weather_overcast">Overcast</string>
+    <string name="weather_rain">Rain</string>
+    <string name="label_atmospheric_pressure">Atmospheric pressure</string>
+    <string name="label_pressure_short">Pressure</string>
+    <string name="unit_mm">mm</string>
+    <string name="btn_save_observation">Save observation</string>
+
+    <!-- Observation details -->
+    <string name="screen_details_title">Details</string>
+    <string name="alert_big_difference">Large difference</string>
+    <string name="header_my_observations">My observations</string>
+    <string name="header_api_data">OpenWeather data</string>
+    <string name="label_wind">Wind</string>
+    <string name="label_description">Description</string>
+    <string name="unit_pressure_mm">mmHg</string>
+    <string name="value_mock_api">Mock data from API</string>
+    <string name="btn_delete_record">Delete record</string>
 </resources>
