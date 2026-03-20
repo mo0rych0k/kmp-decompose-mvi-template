@@ -11,13 +11,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.compose.runtime)
             implementation(libs.compose.components.resources)
+            api(libs.compose.runtime)
             api(projects.common.uikit)
             api(projects.common.resources)
             api(projects.common.coreDi)
             api(projects.common.coreFoundation)
             api(projects.common.coreNavigation)
+            api(projects.common.coreThreading)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

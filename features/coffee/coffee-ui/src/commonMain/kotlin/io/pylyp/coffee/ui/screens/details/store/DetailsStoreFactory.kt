@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.pylyp.coffee.domain.usecase.CoffeeListFlowUseCase
 import io.pylyp.coffee.ui.screens.gallery.entity.CoffeeImageUiData
 import io.pylyp.coffee.ui.screens.gallery.mapper.toUi
+import io.pylyp.common.core.foundation.entity.Resource
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -74,9 +75,16 @@ internal class DetailsStoreFactory(
     private inner class BootstrapperImpl :
         CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            coffeeListFlowUseCase()
-                .onEach { images ->
-                    dispatch(Action.CoffeeListLoaded(images = images.map { it.toUi() }))
+            coffeeListFlowUseCase(parameters = Unit)
+                .onEach { resource ->
+                    when (resource) {
+                        is Resource.Error -> Unit
+                        is Resource.Idle -> Unit
+                        is Resource.Loading -> Unit
+                        is Resource.Success -> {
+                            dispatch(Action.CoffeeListLoaded(images = resource.data.map { it.toUi() }))
+                        }
+                    }
                 }
                 .launchIn(scope)
         }

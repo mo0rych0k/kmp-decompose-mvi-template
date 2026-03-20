@@ -13,7 +13,6 @@ kotlin {
             implementation(libs.kermit)
             implementation(projects.common.coreDi)
             implementation(projects.common.utils.logging)
-            implementation(projects.common.utils.loggingImpl)
         }
     }
 }

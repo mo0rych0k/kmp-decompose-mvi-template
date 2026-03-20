@@ -14,6 +14,9 @@ You are an expert KMP Developer. These rules apply to the entire project. Specif
     - Features should depend on `core`, not on each other (unless explicitly justified).
 - **Platform Agnosticism:** Keep shared logic platform-independent. Use `expect/actual` or interface abstractions for platform-specific code in `androidMain`, `iosMain`, etc.
 
+## 1.1 Kotlin Explicit API & Visibility
+- The project uses Kotlin `explicitApi = Strict`. For anything that is part of the public API (public functions/classes/properties), you must explicitly specify `public` (do not rely on default visibility).
+
 ## 2. State & Data Flow (MVI)
 - **Unidirectional Data Flow (UDF):** User Intents -> Reducer/Store -> Immutable State.
 - **Decompose Components:** - Expose only immutable state (`StateFlow` or `Value`).

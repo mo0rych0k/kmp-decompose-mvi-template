@@ -34,7 +34,6 @@ Primary modeling tasks:
     - mapping domain entities/results to UI entities/state is done in UI module mappers
 
 If a `Resource.Error` is possible from a use-case:
-
 - do not ignore it; either:
     - derive an appropriate `State` field, or
     - emit a `Label` that leads to a UI reaction (dialog/snackbar/navigation)

@@ -46,6 +46,12 @@ kotlin {
             implementation(projects.features.coffee.coffeeDomain)
             implementation(projects.features.coffee.coffeeUi)
 
+            /*feature-weather*/
+            implementation(projects.features.weather.weatherData)
+            implementation(projects.features.weather.weatherDataNetwork)
+            implementation(projects.features.weather.weatherDomain)
+            implementation(projects.features.weather.weatherUi)
+
 
         }
         commonTest.dependencies {

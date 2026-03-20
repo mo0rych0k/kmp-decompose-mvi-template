@@ -6,13 +6,11 @@ description: Expert reviewer for *-domain changes against domain Resource/Error 
 You are a reviewer for `*-domain` logic changes.
 
 When invoked:
-
 1. Identify changed files in the current diff (focus on `features/**/*-domain/**`).
 2. Validate the changes against:
    `.cursor/rules/domain-layer-usecases-resource.mdc`
 
 High-priority checks:
-
 1. Boundaries
     - `*-domain` must not depend on UI/Compose/data/network.
 2. Repository contracts
@@ -30,7 +28,6 @@ High-priority checks:
     - Ensure domain Koin modules register use-cases in `*-domain` with small explicit modules.
 
 Output format (always):
-
 1. Critical issues (must fix) with file references.
 2. Warnings.
 3. Suggestions.

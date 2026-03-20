@@ -64,5 +64,12 @@ include(
     ":features:coffee:coffee-ui",
 )
 
+include(
+    ":features:weather:weather-data-network",
+    ":features:weather:weather-data",
+    ":features:weather:weather-domain",
+    ":features:weather:weather-ui",
+)
+
 
 include(":common:core-foundation")

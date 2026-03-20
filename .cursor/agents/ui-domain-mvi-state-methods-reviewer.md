@@ -13,7 +13,6 @@ When invoked:
    `.cursor/rules/ui-domain-mvi-state-methods.mdc`
 
 High-priority checks:
-
 1. UI MVI contracts correctness
     - `*Store` has `Intent`/`State`/`Label` with sealed typed structures.
     - `State` is immutable `data class` with `val` properties.
@@ -35,7 +34,6 @@ High-priority checks:
       state/label).
 
 Output format (always):
-
 1. Critical issues (must fix) with file references.
 2. Warnings.
 3. Suggestions.

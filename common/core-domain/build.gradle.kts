@@ -10,7 +10,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
             api(projects.common.coreDi)
             api(projects.common.coreFoundation)
         }

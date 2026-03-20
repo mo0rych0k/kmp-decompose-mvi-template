@@ -13,7 +13,6 @@ When invoked:
    `.cursor/rules/feature-module-structure.mdc`
 
 High-priority checks:
-
 1. Feature module structure
     - `*-ui`, `*-domain`, `*-data`, `*-data-network` exist (and `*-ui-components` only when
       explicitly requested).
@@ -36,7 +35,6 @@ High-priority checks:
     - registrations exist per layer and are split (data, data-network, domain, ui/decompose).
 
 Output format (always):
-
 1. Critical issues (must fix) with file references.
 2. Warnings.
 3. Suggestions.

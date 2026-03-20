@@ -16,7 +16,10 @@ import io.pylyp.cover.ui.di.createCoverRootComponent
 import io.pylyp.cover.ui.roating.CoverRootComponent
 import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Coffee
 import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Cover
+import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Weather
 import io.pylyp.sample.composeapp.roating.mapper.toConfig
+import io.pylyp.weather.ui.di.createWeatherRootComponent
+import io.pylyp.weather.ui.roating.WeatherRootComponent
 import kotlinx.serialization.Serializable
 
 public interface AppRootComponent {
@@ -25,6 +28,7 @@ public interface AppRootComponent {
     public sealed class Child {
         public class Cover(public val component: CoverRootComponent) : Child()
         public class Coffee(public val component: CoffeeRootComponent) : Child()
+        public class Weather(public val component: WeatherRootComponent) : Child()
     }
 }
 
@@ -62,6 +66,13 @@ public class DefaultAppRootComponent(
                     componentContext = componentContext,
                 ),
             )
+
+            AppRootConfig.Weather -> Weather(
+                component = componentFactory.createWeatherRootComponent(
+                    componentContext = componentContext,
+                    onFinished = ::onCloseFeature,
+                ),
+            )
         }
 
     private fun onCloseFeature() {
@@ -80,5 +91,8 @@ public class DefaultAppRootComponent(
 
         @Serializable
         data object Coffee : AppRootConfig
+
+        @Serializable
+        data object Weather : AppRootConfig
     }
 }

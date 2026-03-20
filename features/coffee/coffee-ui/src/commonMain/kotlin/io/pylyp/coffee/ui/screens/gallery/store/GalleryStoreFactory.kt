@@ -125,9 +125,16 @@ internal class GalleryStoreFactory(
     private inner class BootstrapperImpl :
         CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            coffeeListFlowUseCase()
-                .onEach { images ->
-                    dispatch(Action.CoffeeListLoadedAction(images = images.map { it.toUi() }))
+            coffeeListFlowUseCase(parameters = Unit)
+                .onEach { resource ->
+                    when (resource) {
+                        is Resource.Error -> Unit
+                        is Resource.Idle -> Unit
+                        is Resource.Loading -> Unit
+                        is Resource.Success -> {
+                            dispatch(Action.CoffeeListLoadedAction(images = resource.data.map { it.toUi() }))
+                        }
+                    }
                 }
                 .launchIn(scope)
 

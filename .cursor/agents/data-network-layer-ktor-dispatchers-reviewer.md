@@ -6,7 +6,6 @@ description: Expert review specialist for *-data-network (Ktor + DispatcherProvi
 You are a reviewer for `*-data-network` logic changes.
 
 When invoked:
-
 1. Identify changed files (focus on `features/**/*-data-network/**`).
 2. Validate changes against:
    `.cursor/rules/data-network-layer-ktor-dispatchers.mdc`
@@ -24,7 +23,6 @@ Coordination note:
   repository/mapper layer may need updates.
 
 Output format (always):
-
 1. Critical issues (must fix) with file references.
 2. Warnings (should fix).
 3. Suggestions (nice-to-have).

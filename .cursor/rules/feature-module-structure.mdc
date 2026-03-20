@@ -1,7 +1,10 @@
 ---
 description: Rules for creating a new feature (ui/domain/data/data-network modules) for KMP + Decompose + MVI
-alwaysApply: true
+alwaysApply: false
 ---
+
+## Scope
+This rules file is intended **exclusively** for use by the agent `.cursor/agents/feature-module-generator.md` during new feature scaffolding.
 
 ## Feature structure
 

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
     alias(libs.plugins.ksp)
@@ -14,15 +12,6 @@ kotlin {
     }
 
     sourceSets {
-        all {
-            languageSettings {
-                @OptIn(ExperimentalKotlinGradlePluginApi::class)
-                compilerOptions {
-                    freeCompilerArgs.add("-Xexpect-actual-classes")
-                }
-            }
-        }
-
         commonMain.dependencies {
             implementation(projects.common.coreDi)
             implementation(projects.common.coreThreading)

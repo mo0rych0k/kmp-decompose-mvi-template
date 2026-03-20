@@ -7,4 +7,10 @@ kotlin {
         namespace = "io.pylyp.common.core.foundation"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+        }
+    }
 }

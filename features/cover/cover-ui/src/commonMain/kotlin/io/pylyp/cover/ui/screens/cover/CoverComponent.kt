@@ -10,8 +10,8 @@ import io.pylyp.core.navigation.asValue
 import io.pylyp.core.navigation.subscribe
 import io.pylyp.cover.ui.di.createCoverStore
 import io.pylyp.cover.ui.screens.cover.store.CoverStore
-import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.KoinComponent
+import kotlinx.coroutines.CoroutineScope
 
 internal interface CoverComponent {
     val state: Value<CoverStore.State>
@@ -38,6 +38,7 @@ internal class DefaultCoverComponent(
             when (label) {
                 CoverStore.Label.BackPressedLabel -> onCloseFeature.invoke()
                 CoverStore.Label.OnNavigateToCoffeeLabel -> onNavigateToFeature(AppFeature.Coffee)
+                CoverStore.Label.OnNavigateToWeatherLabel -> onNavigateToFeature(AppFeature.Weather)
             }
         }
     }

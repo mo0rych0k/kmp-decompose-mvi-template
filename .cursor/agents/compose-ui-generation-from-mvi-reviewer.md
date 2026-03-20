@@ -13,7 +13,6 @@ When invoked:
    `.cursor/rules/compose-ui-generation-from-mvi.mdc`
 
 High-priority checks:
-
 1. Dumb composables
     - no Koin/DI calls inside `@Composable`
     - no store creation inside `@Composable`
@@ -28,7 +27,6 @@ High-priority checks:
 5. Previews exist with `Store.State()` and empty intents handler.
 
 Output format (always):
-
 1. Critical issues (must fix) with file references.
 2. Warnings.
 3. Suggestions.
