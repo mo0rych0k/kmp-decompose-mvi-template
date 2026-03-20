@@ -15,6 +15,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.pylyp.coffee.ui.roating.CoffeeRootMain
 import io.pylyp.cover.ui.roating.CoverRootMain
 import io.pylyp.weather.ui.roating.WeatherRootMain
+import io.pylyp.weather.ui.skytrack.SkyTrackRootMain
 
 @Composable
 public fun AppRootMain(rootComponent: AppRootComponent) {
@@ -42,6 +43,12 @@ public fun AppRootMain(rootComponent: AppRootComponent) {
                 )
 
                 is AppRootComponent.Child.Weather -> WeatherRootMain(
+                    component = instance.component,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
+
+                is AppRootComponent.Child.SkyTrack -> SkyTrackRootMain(
                     component = instance.component,
                     modifier = Modifier
                         .fillMaxSize(),

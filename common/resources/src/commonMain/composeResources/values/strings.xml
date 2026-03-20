@@ -39,6 +39,7 @@
     <string name="header_now">Now</string>
     <string name="header_loading">Loading…</string>
     <string name="label_wind_direction">Wind direction</string>
+    <string name="label_wind_strength">Wind strength</string>
     <string name="wind_north">North (N)</string>
     <string name="label_humidity">Humidity</string>
     <string name="label_weather_type">Weather type</string>

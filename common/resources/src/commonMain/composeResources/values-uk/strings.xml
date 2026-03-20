@@ -39,6 +39,7 @@
     <string name="header_now">Зараз</string>
     <string name="header_loading">Завантаження…</string>
     <string name="label_wind_direction">Напрямок вітру</string>
+    <string name="label_wind_strength">Сила вітру</string>
     <string name="wind_north">Північ (Пн)</string>
     <string name="label_humidity">Вологість</string>
     <string name="label_weather_type">Тип погоди</string>

@@ -12,6 +12,7 @@ public actual val persistenceDatabasePlatformModule: Module = module {
         val dbFile = File(System.getProperty("java.io.tmpdir"), DB_NAME)
         Room.databaseBuilder<AppDatabase>(
             name = dbFile.absolutePath,
-        ).build()
+        )
+            .build()
     }
 }

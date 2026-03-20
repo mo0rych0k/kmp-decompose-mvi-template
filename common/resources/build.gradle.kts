@@ -1,13 +1,15 @@
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
     alias(libs.plugins.app.composeMultiplatform)
-    alias(libs.plugins.composeMultiplatform)
 }
+
+val modulePackage = "io.pylyp.common.resources"
 
 kotlin {
     androidLibrary {
-        namespace = "io.pylyp.common.resources"
+        namespace = modulePackage
         compileSdk = libs.versions.android.compileSdk.get().toInt()
+        androidResources.enable = true
     }
 
     jvmToolchain(21)
@@ -21,6 +23,7 @@ kotlin {
 }
 
 compose.resources {
-    packageOfResClass = "io.pylyp.common.resources.internal"
     publicResClass = true
+    packageOfResClass = "io.pylyp.common.resources"
+    generateResClass = always
 }

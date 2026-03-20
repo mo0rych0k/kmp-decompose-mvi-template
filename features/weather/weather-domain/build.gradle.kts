@@ -12,7 +12,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization)
-            implementation(projects.common.coreDomain)
+            api(projects.common.coreDomain)
         }
     }
 }

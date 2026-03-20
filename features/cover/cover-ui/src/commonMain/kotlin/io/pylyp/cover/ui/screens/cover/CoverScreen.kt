@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -101,6 +102,15 @@ private fun ContentScreen(
                 description = "Current weather from free open APIs.",
                 icon = Icons.Default.Cloud,
                 onClick = { onIntent(CoverStore.Intent.OnNavigateToWeatherIntent) },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FeatureCard(
+                title = "SkyTrack Verification",
+                description = "Compare your observations with OpenWeather at your GPS location.",
+                icon = Icons.Default.Star,
+                onClick = { onIntent(CoverStore.Intent.OnNavigateToSkyTrackIntent) },
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -13,10 +13,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization)
             implementation(projects.common.coreUi)
+            implementation(projects.common.resources)
             implementation(projects.features.weather.weatherDomain)
         }
     }
 }
-

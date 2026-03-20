@@ -2,6 +2,8 @@ package io.pylyp.common.core.persistence.di
 
 import io.pylyp.common.core.persistence.CoffeeImagesStorage
 import io.pylyp.common.core.persistence.CoffeeImagesStorageImpl
+import io.pylyp.common.core.persistence.WeatherObservationStorage
+import io.pylyp.common.core.persistence.WeatherObservationStorageImpl
 import io.pylyp.common.core.persistence.db.DatabaseCreator
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -11,6 +13,7 @@ import org.koin.dsl.module
 public val persistenceDatabaseModule: Module = module {
     singleOf(::DatabaseCreator)
     singleOf(::CoffeeImagesStorageImpl) bind CoffeeImagesStorage::class
+    singleOf(::WeatherObservationStorageImpl) bind WeatherObservationStorage::class
 }
 
 public expect val persistenceDatabasePlatformModule: Module

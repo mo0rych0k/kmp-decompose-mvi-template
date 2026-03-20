@@ -13,7 +13,8 @@ public actual val persistenceDatabasePlatformModule: Module = module {
         val dbFile = appContext.getDatabasePath(DB_NAME)
         Room.databaseBuilder<AppDatabase>(
             context = appContext,
-            name = dbFile.absolutePath
-        ).build()
+            name = dbFile.absolutePath,
+        )
+            .build()
     }
 }

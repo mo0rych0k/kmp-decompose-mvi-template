@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
-    alias(libs.plugins.app.composeMultiplatform)
 }
 
 kotlin {

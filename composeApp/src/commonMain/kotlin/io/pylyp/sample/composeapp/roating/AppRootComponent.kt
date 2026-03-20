@@ -16,10 +16,13 @@ import io.pylyp.cover.ui.di.createCoverRootComponent
 import io.pylyp.cover.ui.roating.CoverRootComponent
 import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Coffee
 import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Cover
+import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.SkyTrack
 import io.pylyp.sample.composeapp.roating.AppRootComponent.Child.Weather
 import io.pylyp.sample.composeapp.roating.mapper.toConfig
+import io.pylyp.weather.ui.di.createSkyTrackRootComponent
 import io.pylyp.weather.ui.di.createWeatherRootComponent
 import io.pylyp.weather.ui.roating.WeatherRootComponent
+import io.pylyp.weather.ui.skytrack.SkyTrackRootComponent
 import kotlinx.serialization.Serializable
 
 public interface AppRootComponent {
@@ -29,6 +32,7 @@ public interface AppRootComponent {
         public class Cover(public val component: CoverRootComponent) : Child()
         public class Coffee(public val component: CoffeeRootComponent) : Child()
         public class Weather(public val component: WeatherRootComponent) : Child()
+        public class SkyTrack(public val component: SkyTrackRootComponent) : Child()
     }
 }
 
@@ -73,6 +77,13 @@ public class DefaultAppRootComponent(
                     onFinished = ::onCloseFeature,
                 ),
             )
+
+            AppRootConfig.SkyTrack -> SkyTrack(
+                component = componentFactory.createSkyTrackRootComponent(
+                    componentContext = componentContext,
+                    onFinished = ::onCloseFeature,
+                ),
+            )
         }
 
     private fun onCloseFeature() {
@@ -94,5 +105,8 @@ public class DefaultAppRootComponent(
 
         @Serializable
         data object Weather : AppRootConfig
+
+        @Serializable
+        data object SkyTrack : AppRootConfig
     }
 }

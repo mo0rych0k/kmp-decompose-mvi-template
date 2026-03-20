@@ -39,6 +39,7 @@ internal class DefaultCoverComponent(
                 CoverStore.Label.BackPressedLabel -> onCloseFeature.invoke()
                 CoverStore.Label.OnNavigateToCoffeeLabel -> onNavigateToFeature(AppFeature.Coffee)
                 CoverStore.Label.OnNavigateToWeatherLabel -> onNavigateToFeature(AppFeature.Weather)
+                CoverStore.Label.OnNavigateToSkyTrackLabel -> onNavigateToFeature(AppFeature.SkyTrack)
             }
         }
     }
