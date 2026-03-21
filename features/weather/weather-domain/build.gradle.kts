@@ -11,9 +11,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization)
             api(projects.common.coreDomain)
         }
     }
 }
-

@@ -49,8 +49,7 @@ import io.pylyp.weather.ui.skytrack.ObservationLocationBlock
 import io.pylyp.weather.ui.skytrack.history.store.SkyTrackHistoryStore
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -225,14 +224,10 @@ private fun ObservationListItem(
 @Suppress("MagicNumber")
 private fun formatTime(epochMs: Long): String {
     val zone = TimeZone.currentSystemDefault()
-    val recordLocal = Instant.fromEpochMilliseconds(epochMs).toLocalDateTime(zone)
-    val today = Clock.System.now().toLocalDateTime(zone).date
+    val stdInstant = Instant.fromEpochMilliseconds(epochMs)
+    val recordLocal = stdInstant.toLocalDateTime(zone)
     val timePart = "${recordLocal.hour.twoDigits()}:${recordLocal.minute.twoDigits()}"
-    return if (recordLocal.date == today) {
-        timePart
-    } else {
-        "${recordLocal.date} $timePart"
-    }
+    return "${recordLocal.date} $timePart"
 }
 
 @Suppress("MagicNumber")

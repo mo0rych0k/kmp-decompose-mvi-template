@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
@@ -93,15 +92,6 @@ private fun ContentScreen(
                 description = "Explore the best blends and find inspiration in every bean.",
                 icon = Icons.Default.Collections,
                 onClick = { onIntent(CoverStore.Intent.OnNavigateToCoffeeIntent) },
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            FeatureCard(
-                title = "Weather Kyiv",
-                description = "Current weather from free open APIs.",
-                icon = Icons.Default.Cloud,
-                onClick = { onIntent(CoverStore.Intent.OnNavigateToWeatherIntent) },
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -38,9 +38,6 @@ internal class CoverStoreFactory(
                 CoverStore.Intent.OnNavigateToCoffeeIntent ->
                     publish(label = CoverStore.Label.OnNavigateToCoffeeLabel)
 
-                CoverStore.Intent.OnNavigateToWeatherIntent ->
-                    publish(label = CoverStore.Label.OnNavigateToWeatherLabel)
-
                 CoverStore.Intent.OnNavigateToSkyTrackIntent ->
                     publish(label = CoverStore.Label.OnNavigateToSkyTrackLabel)
             }

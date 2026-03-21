@@ -7,7 +7,6 @@ internal fun AppFeature.toConfig(): AppRootConfig {
     return when (this) {
         AppFeature.Coffee -> AppRootConfig.Coffee
         AppFeature.Cover -> AppRootConfig.Cover
-        AppFeature.Weather -> AppRootConfig.Weather
         AppFeature.SkyTrack -> AppRootConfig.SkyTrack
     }
 }
