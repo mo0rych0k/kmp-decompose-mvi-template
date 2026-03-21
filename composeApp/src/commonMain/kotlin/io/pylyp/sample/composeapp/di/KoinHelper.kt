@@ -15,7 +15,8 @@ public fun initKoin(
     )
 }
 
-public fun initKoinInPlatform() {
+/** Avoid `init*` prefix — Swift/Obj-C interop treats those as initializers and may omit the symbol. */
+public fun bootstrapPlatformKoin() {
     initKoin { }
 }
 

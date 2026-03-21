@@ -1,5 +1,6 @@
 package io.pylyp.cover.ui.screens.cover.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 
 internal interface CoverStore : Store<CoverStore.Intent, CoverStore.State, CoverStore.Label> {
@@ -9,6 +10,7 @@ internal interface CoverStore : Store<CoverStore.Intent, CoverStore.State, Cover
         data object OnNavigateToSkyTrackIntent : Intent
     }
 
+    @Immutable
     data class State(
         val isLoading: Boolean = false,
     )

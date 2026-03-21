@@ -1,0 +1,85 @@
+---
+description: Compose component extraction, organization, and preview guidelines
+globs: features/**/*-ui/**, common/**/uikit/**
+alwaysApply: false
+---
+
+# Compose Component Architecture
+
+## 1) Extraction
+- Move Compose methods into separate component files.
+- Each reusable `@Composable` function lives in its own file under an appropriate `components` package.
+- Keep screens thin: orchestration and state wiring only; delegate rendering to extracted components.
+
+## 2) Organization
+
+### Single-screen components
+- Place components used on **one screen only** in a local `components` package within that screen's directory.
+- Path: `features/<feature>/<feature>-ui/.../screens/<screen>/components/<ComponentName>.kt`
+
+Example:
+```
+skytrack/
+  details/
+    SkyTrackDetailsScreen.kt
+    components/
+      ComparisonRowComponent.kt
+      DetailsContentComponent.kt
+  history/
+    SkyTrackHistoryScreen.kt
+    components/
+      ObservationListItemComponent.kt
+```
+
+### Shared components
+- Place components used across **multiple screens** in a `components` package at the feature level.
+- Path: `features/<feature>/<feature>-ui/.../components/<ComponentName>.kt`
+
+Example:
+```
+weather-ui/
+  skytrack/
+    components/          # shared across details, history, add
+      ObservationLocationBlockComponent.kt
+    WindStrengthIconsComponent.kt
+```
+
+## 3) Previews & Testing
+- Include a `@Preview` for **every** component.
+- Mark preview composables as `internal` so they remain accessible for screenshot/UI testing.
+- Use default/sample state and empty `onIntent` or callbacks in previews.
+- Wrap in `AppTheme` (or equivalent) when the component depends on theme.
+
+```kotlin
+@Preview
+@Composable
+internal fun ComparisonRowComponentPreview() {
+    AppTheme {
+        ComparisonRowComponent(
+            label = "Temperature",
+            user = "+5°C",
+            api = "+3°C",
+            delta = "2°",
+        )
+    }
+}
+```
+
+## 4) Naming
+- **Component suffix:** All standalone/extracted `@Composable` functions must use the `Component` suffix (e.g. `WindStrengthIconsComponent`, `ObservationListItemComponent`, `FeatureCardComponent`).
+- Component files: PascalCase matching the composable name (e.g. `ObservationListItemComponent.kt`).
+- Preview functions: `*ComponentPreview` suffix (e.g. `ObservationListItemComponentPreview`).
+
+## 5) UI models & domain boundary
+- **Dedicated UI types:** Define UI-layer data classes in `*-ui` (e.g. `*Ui`, `*UiModel`, list item models, dialog payloads) for structured data shown in Compose. Prefer these over passing domain types through the tree.
+- **Composables do not take domain models:** `@Composable` parameters must not use `*-domain` model types. Map `Domain → UI model` in the `Store` (reducer/executor/side-effect handler) or a small mapper colocated with the store so state exposed to the UI only contains primitives, enums, and UI models.
+- **Mapping:** Keep mapping explicit—same spirit as Data ↔ Domain in lower layers. Presentation owns `Domain → UI`; composables only render UI models + events.
+
+## 6) Stability & Compose performance (`@Immutable`)
+- Apply `@Immutable` from `androidx.compose.runtime.Immutable` to **every** UI-layer data class that is held in store state or passed as `@Composable` parameters (including nested types).
+- Annotate the MVI `Store.State` type with `@Immutable` when it is a data class.
+- **Goal:** Help Compose treat parameters as stable where appropriate and reduce avoidable recompositions. If a type cannot honestly be `@Immutable`, fix mutability at the source or use a stable wrapper pattern rather than leaking unstable domain instances into Compose.
+
+## 7) Layout stability (loading ↔ content)
+- When swapping a loader (e.g. `CircularProgressIndicator`) for primary content (list, compass, form), give both branches the **same** outer constraints: e.g. shared `Modifier.fillMaxSize().heightIn(min = …)`, or a fixed `BoxWithConstraints` / `size` for the interactive region.
+- Avoid replacing a small `Text("Loading…")` with a large scrollable `Column` without reserving the same min height for the loading branch.

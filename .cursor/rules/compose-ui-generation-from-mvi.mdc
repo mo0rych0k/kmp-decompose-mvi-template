@@ -24,11 +24,13 @@ alwaysApply: false
 
 ## 4) Intent forwarding pattern
 - `ContentScreen` must accept:
-  - `state: Store.State`
+  - `state: Store.State` (built from **UI models + primitives**, not domain entities in composable parameters—see `.cursor/rules/compose-component-architecture.mdc`)
   - `onIntent: (Store.Intent) -> Unit`
 - `ContentScreen` must call `onIntent(intent)` from click/scroll/pager events.
 - Root `*Screen` should wire `onIntent = { component.onIntent(it) }` or pass through.
 
 ## 5) Previews
 - Provide `@Preview` composables using default `Store.State()` and empty `onIntent`.
+- Mark preview methods as `internal` for screenshot/UI testing access.
+- See `.cursor/rules/compose-component-architecture.mdc` for component extraction, naming (Component suffix), and stability (@Immutable).
 

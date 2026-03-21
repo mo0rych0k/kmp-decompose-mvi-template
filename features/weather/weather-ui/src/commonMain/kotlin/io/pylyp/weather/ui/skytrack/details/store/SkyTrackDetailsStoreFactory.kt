@@ -6,15 +6,20 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.pylyp.common.core.foundation.entity.Resource
+import io.pylyp.common.sharekit.ShareManager
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
 import io.pylyp.weather.domain.usecase.DeleteWeatherObservationUseCase
 import io.pylyp.weather.domain.usecase.GetWeatherObservationByIdUseCase
+import io.pylyp.weather.ui.share.toShareJson
+import io.pylyp.weather.ui.skytrack.model.WeatherObservationRecordUi
+import io.pylyp.weather.ui.skytrack.model.toWeatherObservationRecordUi
 import kotlinx.coroutines.launch
 
 internal class SkyTrackDetailsStoreFactory(
     private val factory: StoreFactory,
     private val getByIdUseCase: GetWeatherObservationByIdUseCase,
     private val deleteUseCase: DeleteWeatherObservationUseCase,
+    private val shareManager: ShareManager,
     private val recordId: Long,
 ) {
 
@@ -33,7 +38,7 @@ internal class SkyTrackDetailsStoreFactory(
     }
 
     private sealed interface Message {
-        data class LoadedMessage(val record: WeatherObservationRecordDD?) : Message
+        data class LoadedMessage(val record: WeatherObservationRecordUi?) : Message
         data class ErrorMessage(val message: String) : Message
         data class LoadingMessage(val isLoading: Boolean) : Message
     }
@@ -58,6 +63,7 @@ internal class SkyTrackDetailsStoreFactory(
                 SkyTrackDetailsStore.Intent.BackIntent -> publish(SkyTrackDetailsStore.Label.BackLabel)
                 SkyTrackDetailsStore.Intent.RetryIntent -> forward(Action.LoadAction)
                 SkyTrackDetailsStore.Intent.DeleteIntent -> delete()
+                SkyTrackDetailsStore.Intent.ShareIntent -> share()
             }
         }
 
@@ -75,7 +81,11 @@ internal class SkyTrackDetailsStoreFactory(
                         Resource.Loading -> dispatch(Message.LoadingMessage(isLoading = true))
                         is Resource.Success -> {
                             dispatch(Message.LoadingMessage(isLoading = false))
-                            dispatch(Message.LoadedMessage(record = resource.data))
+                            dispatch(
+                                Message.LoadedMessage(
+                                    record = resource.data?.toWeatherObservationRecordUi(),
+                                ),
+                            )
                         }
 
                         is Resource.Error -> {
@@ -101,6 +111,11 @@ internal class SkyTrackDetailsStoreFactory(
                     }
                 }
             }
+        }
+
+        private fun share() {
+            val rec = state().record ?: return
+            shareManager.shareText(rec.toShareJson())
         }
     }
 

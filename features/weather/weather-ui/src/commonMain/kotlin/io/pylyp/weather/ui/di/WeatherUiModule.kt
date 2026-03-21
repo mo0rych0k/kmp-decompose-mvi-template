@@ -9,6 +9,10 @@ import io.pylyp.weather.ui.skytrack.add.AddWeatherObservationComponent
 import io.pylyp.weather.ui.skytrack.add.DefaultAddWeatherObservationComponent
 import io.pylyp.weather.ui.skytrack.add.store.AddWeatherObservationStore
 import io.pylyp.weather.ui.skytrack.add.store.AddWeatherObservationStoreFactory
+import io.pylyp.weather.ui.skytrack.calendar.DefaultSkyTrackCalendarComponent
+import io.pylyp.weather.ui.skytrack.calendar.SkyTrackCalendarComponent
+import io.pylyp.weather.ui.skytrack.calendar.store.SkyTrackCalendarStore
+import io.pylyp.weather.ui.skytrack.calendar.store.SkyTrackCalendarStoreFactory
 import io.pylyp.weather.ui.skytrack.details.DefaultSkyTrackDetailsComponent
 import io.pylyp.weather.ui.skytrack.details.SkyTrackDetailsComponent
 import io.pylyp.weather.ui.skytrack.details.store.SkyTrackDetailsStore
@@ -17,22 +21,62 @@ import io.pylyp.weather.ui.skytrack.history.DefaultSkyTrackHistoryComponent
 import io.pylyp.weather.ui.skytrack.history.SkyTrackHistoryComponent
 import io.pylyp.weather.ui.skytrack.history.store.SkyTrackHistoryStore
 import io.pylyp.weather.ui.skytrack.history.store.SkyTrackHistoryStoreFactory
+import io.pylyp.weather.ui.skytrack.model.ObservationCalendarDayUi
 import org.koin.core.component.get
 
-internal fun ComponentFactory.createSkyTrackHistoryStore(): SkyTrackHistoryStore {
+internal fun ComponentFactory.createSkyTrackHistoryStore(
+    initialSelectedDay: ObservationCalendarDayUi?,
+): SkyTrackHistoryStore {
     return SkyTrackHistoryStoreFactory(
         factory = get(),
         observeLogsUseCase = get(),
+        deleteUseCase = get(),
+        shareManager = get(),
+        initialSelectedDay = initialSelectedDay,
     ).create()
 }
 
 internal fun ComponentFactory.createSkyTrackHistoryComponent(
     componentContext: ComponentContext,
+    initialSelectedDay: ObservationCalendarDayUi?,
     output: (DefaultSkyTrackHistoryComponent.Output) -> Unit,
 ): SkyTrackHistoryComponent {
     return DefaultSkyTrackHistoryComponent(
         componentContext = componentContext,
         componentFactory = get(),
+        initialSelectedDay = initialSelectedDay,
+        output = output,
+    )
+}
+
+internal fun ComponentFactory.createSkyTrackCalendarStore(
+    initialFocusDay: ObservationCalendarDayUi,
+    initialVisibleYear: Int,
+    initialVisibleMonth: Int,
+): SkyTrackCalendarStore {
+    return SkyTrackCalendarStoreFactory(
+        factory = get(),
+        observeLogsUseCase = get(),
+        shareManager = get(),
+        initialFocusDay = initialFocusDay,
+        initialVisibleYear = initialVisibleYear,
+        initialVisibleMonth = initialVisibleMonth,
+    ).create()
+}
+
+internal fun ComponentFactory.createSkyTrackCalendarComponent(
+    componentContext: ComponentContext,
+    visibleYear: Int,
+    visibleMonth: Int,
+    focusDay: ObservationCalendarDayUi,
+    output: (DefaultSkyTrackCalendarComponent.Output) -> Unit,
+): SkyTrackCalendarComponent {
+    return DefaultSkyTrackCalendarComponent(
+        componentContext = componentContext,
+        componentFactory = get(),
+        visibleYear = visibleYear,
+        visibleMonth = visibleMonth,
+        focusDay = focusDay,
         output = output,
     )
 }
@@ -64,6 +108,7 @@ internal fun ComponentFactory.createSkyTrackDetailsStore(
         factory = get(),
         getByIdUseCase = get(),
         deleteUseCase = get(),
+        shareManager = get(),
         recordId = recordId,
     ).create()
 }
@@ -76,6 +121,7 @@ internal fun ComponentFactory.createSkyTrackDetailsComponent(
     return DefaultSkyTrackDetailsComponent(
         componentContext = componentContext,
         componentFactory = get(),
+        urlOpener = get(),
         recordId = recordId,
         output = output,
     )

@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -17,7 +16,7 @@ kotlin {
     }
 
     targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.withType<Framework>().configureEach {
+        binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", appPackageName)
@@ -37,6 +36,7 @@ kotlin {
             implementation(projects.common.coreNetwork)
             implementation(projects.common.coreThreading)
             implementation(projects.common.persistence.persistenceDatabase)
+            implementation(projects.common.shareKit)
 
             /*feature-cover*/
             implementation(projects.features.cover.coverUi)
@@ -66,7 +66,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "$name.MainKt"
+        mainClass = "${appPackageName}.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

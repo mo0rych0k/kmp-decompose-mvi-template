@@ -13,7 +13,7 @@ public data class WeatherObservationRecordDD(
     public val userWindDirection: WindDirectionDD,
     /** User-estimated wind strength 0–100 (abstract scale). */
     public val userWindStrengthPercent: Int,
-    public val userWeatherType: WeatherTypeDD,
+    public val userWeatherTypes: Set<WeatherTypeDD>,
     public val apiTemperatureC: Double?,
     public val apiHumidityPercent: Int?,
     public val apiPressureMmHg: Double?,

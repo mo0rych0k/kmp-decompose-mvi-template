@@ -3,6 +3,10 @@ name: mvi-edit-review-loop
 description: Runs an edit->review loop for UI/Domain MVI, Compose UI generation, and module scaffolding. Use proactively as a quality gate. 
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a quality-gate orchestrator for this repository’s Kotlin Multiplatform + Decompose + MVI
 template.
 
@@ -30,7 +34,8 @@ When invoked:
 3. Stop conditions:
     - Default max iterations per phase: `3` (to avoid infinite loops).
     - If after max iterations `Critical issues` still exist:
-        - stop and report the remaining critical issues with the last reviewer output.
+        - stop and report the remaining critical issues as **path + symbol + one line** each (do not
+          paste the full reviewer transcript; see `.cursor/rules/token-efficiency.mdc`).
 
 How to interpret reviewer output:
 - Only `Critical issues` block acceptance.
@@ -40,5 +45,6 @@ Output format (always):
 1. Phases executed (MVI modeling / Compose generation / Module scaffolding)
 2. For each phase: number of iterations until pass
 3. Final status: READY/NOT READY (based on absence of Critical issues)
-4. If NOT READY: include the remaining critical issues with file references.
+4. If NOT READY: remaining `Critical issues` as **path + symbol + one line** each (no full log
+   dump).
 

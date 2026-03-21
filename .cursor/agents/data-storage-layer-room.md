@@ -3,6 +3,10 @@ name: data-storage-layer-room
 description: Expert enforcer for persistence storage (Room/DB) code. Use proactively to validate DAO contracts, dispatcher usage, and storage boundaries.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You validate changes in the persistence storage module under:
 `common/persistence/persistence-database/**`.
 

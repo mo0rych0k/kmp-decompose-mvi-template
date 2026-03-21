@@ -7,10 +7,23 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.pylyp.common.core.foundation.entity.Resource
 import io.pylyp.weather.domain.entity.SkyTrackBackgroundWeather
+import io.pylyp.weather.domain.entity.toCenterBearingDegrees
+import io.pylyp.weather.domain.entity.toWindDirectionDD
 import io.pylyp.weather.domain.location.PlaceLabelProvider
 import io.pylyp.weather.domain.usecase.LoadSkyTrackBackgroundWeatherUseCase
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationParams
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationUseCase
+import io.pylyp.weather.ui.skytrack.add.cloudinessTypes
+import io.pylyp.weather.ui.skytrack.model.CommonWeatherUi
+import io.pylyp.weather.ui.skytrack.model.GeoCoordinatesUi
+import io.pylyp.weather.ui.skytrack.model.WeatherTypeUi
+import io.pylyp.weather.ui.skytrack.model.toCommonWeatherDD
+import io.pylyp.weather.ui.skytrack.model.toCommonWeatherUi
+import io.pylyp.weather.ui.skytrack.model.toGeoCoordinatesDD
+import io.pylyp.weather.ui.skytrack.model.toGeoCoordinatesUi
+import io.pylyp.weather.ui.skytrack.model.toWeatherTypeDD
+import io.pylyp.weather.ui.skytrack.model.toWindDirectionDomain
+import io.pylyp.weather.ui.skytrack.model.toWindDirectionUi
 import kotlinx.coroutines.launch
 
 internal class AddWeatherObservationStoreFactory(
@@ -36,8 +49,8 @@ internal class AddWeatherObservationStoreFactory(
 
     private sealed interface Message {
         data class BackgroundLoadedMessage(
-            val coordinates: io.pylyp.weather.domain.entity.GeoCoordinatesDD,
-            val api: io.pylyp.weather.domain.entity.CommonWeatherDD,
+            val coordinates: GeoCoordinatesUi,
+            val api: CommonWeatherUi,
         ) : Message
 
         data class BackgroundFailedMessage(val message: String) : Message
@@ -45,8 +58,11 @@ internal class AddWeatherObservationStoreFactory(
         data class LoadingBackgroundMessage(val isLoading: Boolean) : Message
         data class TemperatureMessage(val value: Double) : Message
         data class WindStrengthMessage(val value: Int) : Message
-        data class WindDirectionMessage(val value: io.pylyp.weather.domain.entity.WindDirectionDD) : Message
-        data class WeatherTypeMessage(val value: io.pylyp.weather.domain.entity.WeatherTypeDD) : Message
+        data class WindDirectionDegreesMessage(val degrees: Float) : Message
+        data class WeatherTypeToggledMessage(val value: WeatherTypeUi) : Message
+        data object OpenWindSetupMessage : Message
+        data object CloseWindSetupMessage : Message
+        data object TemperatureUnitToggledMessage : Message
         data class SavingMessage(val isSaving: Boolean) : Message
 
         /** `null` means save succeeded (caller publishes [AddWeatherObservationStore.Label.SavedLabel]). */
@@ -70,19 +86,30 @@ internal class AddWeatherObservationStoreFactory(
 
         override fun executeIntent(intent: AddWeatherObservationStore.Intent) {
             when (intent) {
-                AddWeatherObservationStore.Intent.BackIntent -> publish(AddWeatherObservationStore.Label.BackLabel)
+                AddWeatherObservationStore.Intent.BackIntent -> {
+                    if (state().isWindSetupVisible) {
+                        dispatch(Message.CloseWindSetupMessage)
+                    } else {
+                        publish(AddWeatherObservationStore.Label.BackLabel)
+                    }
+                }
                 AddWeatherObservationStore.Intent.SaveIntent -> save()
+                AddWeatherObservationStore.Intent.OpenWindSetupIntent -> dispatch(Message.OpenWindSetupMessage)
+                AddWeatherObservationStore.Intent.CloseWindSetupIntent -> dispatch(Message.CloseWindSetupMessage)
                 is AddWeatherObservationStore.Intent.TemperatureChangedIntent ->
                     dispatch(Message.TemperatureMessage(value = intent.value))
+
+                AddWeatherObservationStore.Intent.TemperatureUnitToggleIntent ->
+                    dispatch(Message.TemperatureUnitToggledMessage)
 
                 is AddWeatherObservationStore.Intent.WindStrengthChangedIntent ->
                     dispatch(Message.WindStrengthMessage(value = intent.value))
 
-                is AddWeatherObservationStore.Intent.WindDirectionChangedIntent ->
-                    dispatch(Message.WindDirectionMessage(value = intent.value))
+                is AddWeatherObservationStore.Intent.WindDirectionDegreesIntent ->
+                    dispatch(Message.WindDirectionDegreesMessage(degrees = intent.degrees))
 
-                is AddWeatherObservationStore.Intent.WeatherTypeChangedIntent ->
-                    dispatch(Message.WeatherTypeMessage(value = intent.value))
+                is AddWeatherObservationStore.Intent.WeatherTypeToggledIntent ->
+                    dispatch(Message.WeatherTypeToggledMessage(value = intent.value))
             }
         }
 
@@ -103,8 +130,8 @@ internal class AddWeatherObservationStoreFactory(
                             val coords = resource.data.coordinates
                             dispatch(
                                 Message.BackgroundLoadedMessage(
-                                    coordinates = coords,
-                                    api = resource.data.apiWeather,
+                                    coordinates = coords.toGeoCoordinatesUi(),
+                                    api = resource.data.apiWeather.toCommonWeatherUi(),
                                 ),
                             )
                             dispatch(Message.LoadingBackgroundMessage(isLoading = false))
@@ -142,13 +169,13 @@ internal class AddWeatherObservationStoreFactory(
                 dispatch(Message.SavingMessage(isSaving = true))
                 saveWeatherObservationUseCase(
                     SaveWeatherObservationParams(
-                        coordinates = coords,
+                        coordinates = coords.toGeoCoordinatesDD(),
                         locationLabel = state.locationLabel,
                         userTemperatureC = state.userTemperatureC,
-                        userWindDirection = state.userWindDirection,
+                        userWindDirection = state.userWindDirection.toWindDirectionDomain(),
                         userWindStrengthPercent = state.userWindStrengthPercent,
-                        userWeatherType = state.userWeatherType,
-                        apiWeather = api,
+                        userWeatherTypes = state.userWeatherTypes.map { it.toWeatherTypeDD() }.toSet(),
+                        apiWeather = api.toCommonWeatherDD(),
                     ),
                 ).collect { resource ->
                     when (resource) {
@@ -192,8 +219,40 @@ internal class AddWeatherObservationStoreFactory(
 
                 is Message.TemperatureMessage -> copy(userTemperatureC = msg.value)
                 is Message.WindStrengthMessage -> copy(userWindStrengthPercent = msg.value)
-                is Message.WindDirectionMessage -> copy(userWindDirection = msg.value)
-                is Message.WeatherTypeMessage -> copy(userWeatherType = msg.value)
+                is Message.WindDirectionDegreesMessage ->
+                    copy(
+                        windDirectionDegrees = msg.degrees,
+                        userWindDirection = msg.degrees.toWindDirectionDD().toWindDirectionUi(),
+                    )
+
+                is Message.OpenWindSetupMessage ->
+                    copy(
+                        isWindSetupVisible = true,
+                        windDirectionDegrees = userWindDirection.toWindDirectionDomain().toCenterBearingDegrees(),
+                    )
+
+                is Message.CloseWindSetupMessage -> copy(isWindSetupVisible = false)
+                is Message.TemperatureUnitToggledMessage -> copy(
+                    temperatureUnit = when (temperatureUnit) {
+                        TemperatureUnit.CELSIUS -> TemperatureUnit.FAHRENHEIT
+                        TemperatureUnit.FAHRENHEIT -> TemperatureUnit.CELSIUS
+                    },
+                )
+
+                is Message.WeatherTypeToggledMessage -> {
+                    val v = msg.value
+                    if (v in cloudinessTypes) {
+                        val withoutCloudiness = userWeatherTypes - cloudinessTypes.toSet()
+                        copy(userWeatherTypes = withoutCloudiness + v)
+                    } else {
+                        val next = if (v in userWeatherTypes) {
+                            userWeatherTypes - v
+                        } else {
+                            userWeatherTypes + v
+                        }
+                        copy(userWeatherTypes = next)
+                    }
+                }
                 is Message.SavingMessage ->
                     copy(
                         isSaving = msg.isSaving,

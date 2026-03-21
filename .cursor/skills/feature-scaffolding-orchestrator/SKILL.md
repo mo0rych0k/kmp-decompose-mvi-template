@@ -98,10 +98,10 @@ Use it to:
 
 ## Output requirements
 
-When finished, summarize:
+When finished, summarize **briefly** (`.cursor/rules/token-efficiency.mdc`):
 
-- feature modules created/reused
-- where global navigation integration was updated (`AppFeature`, `AppRootComponent`,
-  `AppRootMapper`, `app di modules`)
-- which reviewers/enforcers were run and whether they passed (or what was fixed)
+- feature modules created/reused (directory paths only)
+- integration touch points as **file paths** (`AppFeature`, `AppRootComponent`, `AppRootMapper`, app
+  DI)
+- reviewers run: pass/fail + **one line per issue fixed**, not full logs
 

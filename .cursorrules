@@ -1,0 +1,18 @@
+# Kotlin Multiplatform / Compose (this repo)
+
+Global architecture: `.cursor/rules/core-standards.mdc`.
+
+## Compose UI models & domain boundary
+- Use dedicated UI-layer data classes in `*-ui`; do not pass `*-domain` models into `@Composable` parameters or through presentation state shown to Compose.
+- Map `Domain → UI` in the store / presentation layer (executors, reducers fed by mapped messages, or small mappers colocated with the store).
+- Annotate UI-layer data classes used in store state or composable parameters with `@Immutable` (`androidx.compose.runtime.Immutable`).
+
+## Component structure & naming
+- Extract standalone `@Composable` functions into separate files under a `components` package (screen-local vs feature-level — see `.cursor/rules/compose-component-architecture.mdc`).
+- Use the `Component` suffix for extracted composable names (e.g. `ObservationListItemComponent`).
+- Previews: `@Preview` on every extracted component; preview composables are `internal` for screenshot/UI tests; wrap in `AppTheme` when themed.
+
+## Layout stability
+- Loaders and the content they replace should use the same minimum / fixed dimensions (e.g. shared `heightIn`, `BoxWithConstraints`, or matched sizes) to avoid layout shift when switching loading ↔ loaded.
+
+Details: `.cursor/rules/compose-component-architecture.mdc`.

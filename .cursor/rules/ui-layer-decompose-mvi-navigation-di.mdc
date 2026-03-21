@@ -32,6 +32,7 @@ alwaysApply: false
   - only read the passed `component.state` (or subscribe-as-state from `component.stack`)
   - call `component.onIntent(...)` / forward events
   - not access Koin/DI and not create stores/components directly.
+- **UI models only in the tree:** State shown in Compose must use UI-layer data classes (and primitives); map from domain inside the store/presentation layer. Annotate those UI models with `@Immutable` per `.cursor/rules/compose-component-architecture.mdc`.
 
 ## 5) UI -> App navigation contract (use AppFeature)
 - For cross-feature navigation, UI must signal intent using:

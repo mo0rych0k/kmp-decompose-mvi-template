@@ -15,14 +15,27 @@ internal fun OpenMeteoCurrentForecastResponseND.toCommonWeather(): CommonWeather
     val pressureHpa = c?.surfacePressureHpa
     val pressureMm = pressureHpa?.times(HPA_TO_MMHG)
     val windDeg = c?.windDirection10m
+    val windDesc = buildWindDescription(
+        directionDeg = windDeg,
+        speedKmh = c?.windSpeed10m,
+    )
     return CommonWeatherDD(
         temperatureC = c?.temperature2m,
         humidityPercent = c?.relativeHumidity2m,
         pressureMmHg = pressureMm,
         windDirectionDeg = windDeg,
-        windDescription = windDeg?.let { windDegreeToCompass(it) },
+        windDescription = windDesc,
         description = c?.weatherCode?.let { openMeteoCodeToText(it) },
     )
+}
+
+private fun buildWindDescription(directionDeg: Int?, speedKmh: Double?): String? {
+    val dir = directionDeg?.let { windDegreeToCompass(it) } ?: return null
+    val speed = speedKmh?.toInt()
+    return when {
+        speed != null -> "$dir $speed km/h"
+        else -> dir
+    }
 }
 
 private fun windDegreeToCompass(deg: Int): String {
@@ -62,7 +75,17 @@ internal fun WeatherObservationLogSD.toDomain(): WeatherObservationRecordDD {
         userPressureMmHg = userPressureMmHg,
         userWindDirection = WindDirectionDD.valueOf(userWindDirectionKey),
         userWindStrengthPercent = userWindStrengthPercent,
-        userWeatherType = WeatherTypeDD.valueOf(userWeatherTypeKey),
+        userWeatherTypes = userWeatherTypeKey.split(',')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .map { key ->
+                when (key) {
+                    "CLOUD_PRECIPITATION" -> WeatherTypeDD.RAIN
+                    else -> WeatherTypeDD.valueOf(key)
+                }
+            }
+            .toSet()
+            .ifEmpty { setOf(WeatherTypeDD.SUNNY) },
         apiTemperatureC = apiTemperatureC,
         apiHumidityPercent = apiHumidityPercent,
         apiPressureMmHg = apiPressureMmHg,
@@ -86,7 +109,7 @@ internal fun WeatherObservationRecordDD.toStorage(): WeatherObservationLogSD {
         userPressureMmHg = userPressureMmHg,
         userWindDirectionKey = userWindDirection.name,
         userWindStrengthPercent = userWindStrengthPercent,
-        userWeatherTypeKey = userWeatherType.name,
+        userWeatherTypeKey = userWeatherTypes.joinToString(",") { it.name },
         apiTemperatureC = apiTemperatureC,
         apiHumidityPercent = apiHumidityPercent,
         apiPressureMmHg = apiPressureMmHg,
