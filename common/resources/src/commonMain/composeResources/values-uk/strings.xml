@@ -51,12 +51,13 @@
     <string name="label_pressure_short">Тиск</string>
     <string name="unit_mm">мм</string>
     <string name="btn_save_observation">Зберегти спостереження</string>
+    <string name="observation_save_missing_background">Немає координат або еталонної погоди. Дочекайтесь завантаження або відкрийте екран знову.</string>
 
     <!-- Observation details -->
     <string name="screen_details_title">Деталі</string>
     <string name="alert_big_difference">Велика різниця</string>
     <string name="header_my_observations">Мої спостереження</string>
-    <string name="header_api_data">Дані OpenWeather</string>
+    <string name="header_api_data">Дані Open-Meteo</string>
     <string name="label_wind">Вітер</string>
     <string name="label_description">Опис</string>
     <string name="unit_pressure_mm">мм рт. ст.</string>

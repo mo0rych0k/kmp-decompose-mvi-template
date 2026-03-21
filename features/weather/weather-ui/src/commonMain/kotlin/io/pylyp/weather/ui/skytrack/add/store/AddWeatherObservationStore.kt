@@ -6,6 +6,9 @@ import io.pylyp.weather.domain.entity.GeoCoordinatesDD
 import io.pylyp.weather.domain.entity.WeatherTypeDD
 import io.pylyp.weather.domain.entity.WindDirectionDD
 
+/** [State.saveError] uses this when save was tapped before background data was ready. */
+internal const val SAVE_ERROR_MISSING_BACKGROUND_KEY: String = "SAVE_ERROR_MISSING_BACKGROUND"
+
 internal interface AddWeatherObservationStore :
     Store<AddWeatherObservationStore.Intent, AddWeatherObservationStore.State, AddWeatherObservationStore.Label> {
     sealed interface Intent {
@@ -29,6 +32,8 @@ internal interface AddWeatherObservationStore :
         val userWindDirection: WindDirectionDD = WindDirectionDD.NORTH,
         val userWeatherType: WeatherTypeDD = WeatherTypeDD.SUNNY,
         val isSaving: Boolean = false,
+        /** Set when persistence fails after Save; cleared on next save attempt. */
+        val saveError: String? = null,
     )
 
     sealed interface Label {

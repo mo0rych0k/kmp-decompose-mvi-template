@@ -1,7 +1,7 @@
 package io.pylyp.weather.data.mappers
 
 import io.pylyp.common.core.persistence.entity.WeatherObservationLogSD
-import io.pylyp.weather.data.network.entity.OpenWeatherCurrentResponseND
+import io.pylyp.weather.data.network.entity.OpenMeteoCurrentForecastResponseND
 import io.pylyp.weather.domain.entity.CommonWeatherDD
 import io.pylyp.weather.domain.entity.TemperatureDiscrepancyLevel
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
@@ -10,19 +10,18 @@ import io.pylyp.weather.domain.entity.WindDirectionDD
 
 private const val HPA_TO_MMHG = 0.750061683
 
-internal fun OpenWeatherCurrentResponseND.toCommonWeather(): CommonWeatherDD {
-    val m = main
-    val w = wind
-    val pressureHpa = m?.pressureHpa
+internal fun OpenMeteoCurrentForecastResponseND.toCommonWeather(): CommonWeatherDD {
+    val c = current
+    val pressureHpa = c?.surfacePressureHpa
     val pressureMm = pressureHpa?.times(HPA_TO_MMHG)
-    val windDeg = w?.deg
+    val windDeg = c?.windDirection10m
     return CommonWeatherDD(
-        temperatureC = m?.temp,
-        humidityPercent = m?.humidity,
+        temperatureC = c?.temperature2m,
+        humidityPercent = c?.relativeHumidity2m,
         pressureMmHg = pressureMm,
         windDirectionDeg = windDeg,
         windDescription = windDeg?.let { windDegreeToCompass(it) },
-        description = weather?.firstOrNull()?.description,
+        description = c?.weatherCode?.let { openMeteoCodeToText(it) },
     )
 }
 
@@ -31,6 +30,25 @@ private fun windDegreeToCompass(deg: Int): String {
     val index = ((deg.toDouble() + 22.5) / 45.0).toInt() % 8
     return directions[index]
 }
+
+@Suppress("CyclomaticComplexMethod")
+private fun openMeteoCodeToText(code: Int): String =
+    when (code) {
+        0 -> "Clear sky"
+        1, 2, 3 -> "Mainly clear / partly cloudy / overcast"
+        45, 48 -> "Fog"
+        51, 53, 55 -> "Drizzle"
+        56, 57 -> "Freezing drizzle"
+        61, 63, 65 -> "Rain"
+        66, 67 -> "Freezing rain"
+        71, 73, 75 -> "Snow fall"
+        77 -> "Snow grains"
+        80, 81, 82 -> "Rain showers"
+        85, 86 -> "Snow showers"
+        95 -> "Thunderstorm"
+        96, 99 -> "Thunderstorm with hail"
+        else -> "Weather code $code"
+    }
 
 internal fun WeatherObservationLogSD.toDomain(): WeatherObservationRecordDD {
     return WeatherObservationRecordDD(

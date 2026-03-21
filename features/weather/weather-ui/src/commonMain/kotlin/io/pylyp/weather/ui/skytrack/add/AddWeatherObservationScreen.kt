@@ -39,6 +39,7 @@ import io.pylyp.common.resources.label_temperature
 import io.pylyp.common.resources.label_weather_type
 import io.pylyp.common.resources.label_wind_direction
 import io.pylyp.common.resources.label_wind_strength
+import io.pylyp.common.resources.observation_save_missing_background
 import io.pylyp.common.resources.screen_new_observation_title
 import io.pylyp.common.resources.weather_cloudy
 import io.pylyp.common.resources.weather_overcast
@@ -50,6 +51,7 @@ import io.pylyp.weather.domain.entity.WeatherTypeDD
 import io.pylyp.weather.domain.entity.WindDirectionDD
 import io.pylyp.weather.ui.skytrack.AddObservationLocationBlock
 import io.pylyp.weather.ui.skytrack.add.store.AddWeatherObservationStore
+import io.pylyp.weather.ui.skytrack.add.store.SAVE_ERROR_MISSING_BACKGROUND_KEY
 import io.pylyp.weather.ui.skytrack.temperatureSliderAccentColor
 import org.jetbrains.compose.resources.stringResource
 
@@ -164,15 +166,35 @@ internal fun AddWeatherObservationScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            val saveErrorText = state.saveError?.let { key ->
+                when (key) {
+                    SAVE_ERROR_MISSING_BACKGROUND_KEY -> stringResource(Res.string.observation_save_missing_background)
+                    else -> key
+                }
+            }
+
             Button(
                 onClick = { component.onIntent(AddWeatherObservationStore.Intent.SaveIntent) },
-                enabled = !state.isLoadingBackground && state.apiData != null && !state.isSaving,
+                enabled = !state.isLoadingBackground &&
+                    state.loadError == null &&
+                    state.apiData != null &&
+                    state.coordinates != null &&
+                    !state.isSaving,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Icon(Icons.Default.Check, contentDescription = null)
                 Text(
                     text = stringResource(Res.string.btn_save_observation),
                     modifier = Modifier.padding(start = 8.dp),
+                )
+            }
+
+            saveErrorText?.let { text ->
+                Text(
+                    text = text,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp),
                 )
             }
         }

@@ -1,6 +1,7 @@
 package io.pylyp.weather.domain.usecase
 
 import io.pylyp.common.core.foundation.entity.SuspendUseCase
+import io.pylyp.weather.domain.entity.CommonWeatherDD
 import io.pylyp.weather.domain.entity.GeoCoordinatesDD
 import io.pylyp.weather.domain.entity.SkyTrackBackgroundWeather
 import io.pylyp.weather.domain.entity.roundedForStorage
@@ -18,10 +19,12 @@ public class LoadSkyTrackBackgroundWeatherUseCase(
         val coords = locationProvider.getCurrentLocation()
             ?.roundedForStorage()
             ?: GeoCoordinatesDD(latitude = KYIV_LAT, longitude = KYIV_LON).roundedForStorage()
-        val api = weatherRepository.getOpenWeatherCurrentWeather(
-            latitude = coords.latitude,
-            longitude = coords.longitude,
-        )
+        val api: CommonWeatherDD = runCatching {
+            weatherRepository.getOpenMeteoCurrentWeather(
+                latitude = coords.latitude,
+                longitude = coords.longitude,
+            )
+        }.getOrElse { CommonWeatherDD.Empty }
         return SkyTrackBackgroundWeather(coordinates = coords, apiWeather = api)
     }
 }

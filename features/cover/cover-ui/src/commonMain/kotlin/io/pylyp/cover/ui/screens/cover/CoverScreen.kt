@@ -98,7 +98,7 @@ private fun ContentScreen(
 
             FeatureCard(
                 title = "SkyTrack Verification",
-                description = "Compare your observations with OpenWeather at your GPS location.",
+                description = "Compare your observations with Open-Meteo at your GPS location.",
                 icon = Icons.Default.Star,
                 onClick = { onIntent(CoverStore.Intent.OnNavigateToSkyTrackIntent) },
             )

@@ -1,14 +1,14 @@
 package io.pylyp.weather.data
 
 import io.pylyp.weather.data.mappers.toCommonWeather
-import io.pylyp.weather.data.network.OpenWeatherRemoteDataSource
+import io.pylyp.weather.data.network.OpenMeteoRemoteDataSource
 import io.pylyp.weather.domain.entity.CommonWeatherDD
 import io.pylyp.weather.domain.repository.WeatherRepository
 
 internal class WeatherRepositoryImpl(
-    private val openWeatherRemoteDataSource: OpenWeatherRemoteDataSource,
+    private val openMeteoRemoteDataSource: OpenMeteoRemoteDataSource,
 ) : WeatherRepository {
 
-    override suspend fun getOpenWeatherCurrentWeather(latitude: Double, longitude: Double): CommonWeatherDD =
-        openWeatherRemoteDataSource.getCurrentWeather(latitude, longitude).toCommonWeather()
+    override suspend fun getOpenMeteoCurrentWeather(latitude: Double, longitude: Double): CommonWeatherDD =
+        openMeteoRemoteDataSource.getCurrentWeather(latitude, longitude).toCommonWeather()
 }

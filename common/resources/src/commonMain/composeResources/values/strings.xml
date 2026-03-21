@@ -51,12 +51,13 @@
     <string name="label_pressure_short">Pressure</string>
     <string name="unit_mm">mm</string>
     <string name="btn_save_observation">Save observation</string>
+    <string name="observation_save_missing_background">Location or reference weather is not ready yet. Wait for loading to finish or reopen the screen.</string>
 
     <!-- Observation details -->
     <string name="screen_details_title">Details</string>
     <string name="alert_big_difference">Large difference</string>
     <string name="header_my_observations">My observations</string>
-    <string name="header_api_data">OpenWeather data</string>
+    <string name="header_api_data">Open-Meteo data</string>
     <string name="label_wind">Wind</string>
     <string name="label_description">Description</string>
     <string name="unit_pressure_mm">mmHg</string>

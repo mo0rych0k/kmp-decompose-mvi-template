@@ -48,6 +48,9 @@ internal class AddWeatherObservationStoreFactory(
         data class WindDirectionMessage(val value: io.pylyp.weather.domain.entity.WindDirectionDD) : Message
         data class WeatherTypeMessage(val value: io.pylyp.weather.domain.entity.WeatherTypeDD) : Message
         data class SavingMessage(val isSaving: Boolean) : Message
+
+        /** `null` means save succeeded (caller publishes [AddWeatherObservationStore.Label.SavedLabel]). */
+        data class SaveFinishedMessage(val error: String?) : Message
     }
 
     private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
@@ -128,6 +131,11 @@ internal class AddWeatherObservationStoreFactory(
             val api = state.apiData
             val coords = state.coordinates
             if (api == null || coords == null) {
+                dispatch(
+                    Message.SaveFinishedMessage(
+                        error = SAVE_ERROR_MISSING_BACKGROUND_KEY,
+                    ),
+                )
                 return
             }
             scope.launch {
@@ -147,12 +155,16 @@ internal class AddWeatherObservationStoreFactory(
                         Resource.Idle -> Unit
                         Resource.Loading -> Unit
                         is Resource.Success -> {
-                            dispatch(Message.SavingMessage(isSaving = false))
+                            dispatch(Message.SaveFinishedMessage(error = null))
                             publish(AddWeatherObservationStore.Label.SavedLabel)
                         }
 
                         is Resource.Error -> {
-                            dispatch(Message.SavingMessage(isSaving = false))
+                            dispatch(
+                                Message.SaveFinishedMessage(
+                                    error = resource.message.ifBlank { "Save failed" },
+                                ),
+                            )
                         }
                     }
                 }
@@ -182,7 +194,14 @@ internal class AddWeatherObservationStoreFactory(
                 is Message.WindStrengthMessage -> copy(userWindStrengthPercent = msg.value)
                 is Message.WindDirectionMessage -> copy(userWindDirection = msg.value)
                 is Message.WeatherTypeMessage -> copy(userWeatherType = msg.value)
-                is Message.SavingMessage -> copy(isSaving = msg.isSaving)
+                is Message.SavingMessage ->
+                    copy(
+                        isSaving = msg.isSaving,
+                        saveError = if (msg.isSaving) null else saveError,
+                    )
+
+                is Message.SaveFinishedMessage ->
+                    copy(isSaving = false, saveError = msg.error)
             }
         }
     }
