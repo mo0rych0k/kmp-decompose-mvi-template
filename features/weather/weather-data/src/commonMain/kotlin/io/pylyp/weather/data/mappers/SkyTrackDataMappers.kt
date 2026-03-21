@@ -62,7 +62,12 @@ internal fun WeatherObservationLogSD.toDomain(): WeatherObservationRecordDD {
         userPressureMmHg = userPressureMmHg,
         userWindDirection = WindDirectionDD.valueOf(userWindDirectionKey),
         userWindStrengthPercent = userWindStrengthPercent,
-        userWeatherType = WeatherTypeDD.valueOf(userWeatherTypeKey),
+        userWeatherTypes = userWeatherTypeKey.split(',')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .map { WeatherTypeDD.valueOf(it) }
+            .toSet()
+            .ifEmpty { setOf(WeatherTypeDD.SUNNY) },
         apiTemperatureC = apiTemperatureC,
         apiHumidityPercent = apiHumidityPercent,
         apiPressureMmHg = apiPressureMmHg,
@@ -86,7 +91,7 @@ internal fun WeatherObservationRecordDD.toStorage(): WeatherObservationLogSD {
         userPressureMmHg = userPressureMmHg,
         userWindDirectionKey = userWindDirection.name,
         userWindStrengthPercent = userWindStrengthPercent,
-        userWeatherTypeKey = userWeatherType.name,
+        userWeatherTypeKey = userWeatherTypes.joinToString(",") { it.name },
         apiTemperatureC = apiTemperatureC,
         apiHumidityPercent = apiHumidityPercent,
         apiPressureMmHg = apiPressureMmHg,

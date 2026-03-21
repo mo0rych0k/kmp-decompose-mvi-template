@@ -24,10 +24,12 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
 
             targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
                 binaries.all {
+                    // Each -linker-option forwards exactly one flag to the Apple linker; version must be a separate -linker-option.
                     freeCompilerArgs += listOf(
                         "-linker-option",
                         "-ios_version_min",
-                        Constants.IOS_MIN_VERSION
+                        "-linker-option",
+                        Constants.IOS_MIN_VERSION,
                     )
                 }
             }
@@ -43,17 +45,8 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                     optIn("kotlin.ExperimentalStdlibApi")
                     optIn("kotlin.time.ExperimentalTime")
                     optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                    optIn("com.russhwolf.settings.ExperimentalSettingsImplementation")
                 }
             }
-
-            targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>()
-                .configureEach {
-                    binaries.withType<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>()
-                        .configureEach {
-                            baseName = path.substring(1).replace(':', '-')
-                        }
-                }
         }
     }
 }

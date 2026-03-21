@@ -9,7 +9,10 @@ import io.pylyp.common.core.foundation.entity.Resource
 import io.pylyp.weather.domain.entity.SkyTrackBackgroundWeather
 import io.pylyp.weather.domain.location.PlaceLabelProvider
 import io.pylyp.weather.domain.usecase.LoadSkyTrackBackgroundWeatherUseCase
+import io.pylyp.weather.domain.entity.toCenterBearingDegrees
+import io.pylyp.weather.domain.entity.toWindDirectionDD
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationParams
+import io.pylyp.weather.ui.skytrack.add.store.TemperatureUnit
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationUseCase
 import kotlinx.coroutines.launch
 
@@ -45,8 +48,11 @@ internal class AddWeatherObservationStoreFactory(
         data class LoadingBackgroundMessage(val isLoading: Boolean) : Message
         data class TemperatureMessage(val value: Double) : Message
         data class WindStrengthMessage(val value: Int) : Message
-        data class WindDirectionMessage(val value: io.pylyp.weather.domain.entity.WindDirectionDD) : Message
-        data class WeatherTypeMessage(val value: io.pylyp.weather.domain.entity.WeatherTypeDD) : Message
+        data class WindDirectionDegreesMessage(val degrees: Float) : Message
+        data class WeatherTypeToggledMessage(val value: io.pylyp.weather.domain.entity.WeatherTypeDD) : Message
+        data object OpenWindSetupMessage : Message
+        data object CloseWindSetupMessage : Message
+        data object TemperatureUnitToggledMessage : Message
         data class SavingMessage(val isSaving: Boolean) : Message
 
         /** `null` means save succeeded (caller publishes [AddWeatherObservationStore.Label.SavedLabel]). */
@@ -70,19 +76,30 @@ internal class AddWeatherObservationStoreFactory(
 
         override fun executeIntent(intent: AddWeatherObservationStore.Intent) {
             when (intent) {
-                AddWeatherObservationStore.Intent.BackIntent -> publish(AddWeatherObservationStore.Label.BackLabel)
+                AddWeatherObservationStore.Intent.BackIntent -> {
+                    if (state().isWindSetupVisible) {
+                        dispatch(Message.CloseWindSetupMessage)
+                    } else {
+                        publish(AddWeatherObservationStore.Label.BackLabel)
+                    }
+                }
                 AddWeatherObservationStore.Intent.SaveIntent -> save()
+                AddWeatherObservationStore.Intent.OpenWindSetupIntent -> dispatch(Message.OpenWindSetupMessage)
+                AddWeatherObservationStore.Intent.CloseWindSetupIntent -> dispatch(Message.CloseWindSetupMessage)
                 is AddWeatherObservationStore.Intent.TemperatureChangedIntent ->
                     dispatch(Message.TemperatureMessage(value = intent.value))
+
+                AddWeatherObservationStore.Intent.TemperatureUnitToggleIntent ->
+                    dispatch(Message.TemperatureUnitToggledMessage)
 
                 is AddWeatherObservationStore.Intent.WindStrengthChangedIntent ->
                     dispatch(Message.WindStrengthMessage(value = intent.value))
 
-                is AddWeatherObservationStore.Intent.WindDirectionChangedIntent ->
-                    dispatch(Message.WindDirectionMessage(value = intent.value))
+                is AddWeatherObservationStore.Intent.WindDirectionDegreesIntent ->
+                    dispatch(Message.WindDirectionDegreesMessage(degrees = intent.degrees))
 
-                is AddWeatherObservationStore.Intent.WeatherTypeChangedIntent ->
-                    dispatch(Message.WeatherTypeMessage(value = intent.value))
+                is AddWeatherObservationStore.Intent.WeatherTypeToggledIntent ->
+                    dispatch(Message.WeatherTypeToggledMessage(value = intent.value))
             }
         }
 
@@ -147,7 +164,7 @@ internal class AddWeatherObservationStoreFactory(
                         userTemperatureC = state.userTemperatureC,
                         userWindDirection = state.userWindDirection,
                         userWindStrengthPercent = state.userWindStrengthPercent,
-                        userWeatherType = state.userWeatherType,
+                        userWeatherTypes = state.userWeatherTypes,
                         apiWeather = api,
                     ),
                 ).collect { resource ->
@@ -192,8 +209,34 @@ internal class AddWeatherObservationStoreFactory(
 
                 is Message.TemperatureMessage -> copy(userTemperatureC = msg.value)
                 is Message.WindStrengthMessage -> copy(userWindStrengthPercent = msg.value)
-                is Message.WindDirectionMessage -> copy(userWindDirection = msg.value)
-                is Message.WeatherTypeMessage -> copy(userWeatherType = msg.value)
+                is Message.WindDirectionDegreesMessage ->
+                    copy(
+                        windDirectionDegrees = msg.degrees,
+                        userWindDirection = msg.degrees.toWindDirectionDD(),
+                    )
+
+                is Message.OpenWindSetupMessage ->
+                    copy(
+                        isWindSetupVisible = true,
+                        windDirectionDegrees = userWindDirection.toCenterBearingDegrees(),
+                    )
+
+                is Message.CloseWindSetupMessage -> copy(isWindSetupVisible = false)
+                is Message.TemperatureUnitToggledMessage -> copy(
+                    temperatureUnit = when (temperatureUnit) {
+                        TemperatureUnit.CELSIUS -> TemperatureUnit.FAHRENHEIT
+                        TemperatureUnit.FAHRENHEIT -> TemperatureUnit.CELSIUS
+                    },
+                )
+
+                is Message.WeatherTypeToggledMessage -> {
+                    val next = if (msg.value in userWeatherTypes) {
+                        if (userWeatherTypes.size > 1) userWeatherTypes - msg.value else userWeatherTypes
+                    } else {
+                        userWeatherTypes + msg.value
+                    }
+                    copy(userWeatherTypes = next)
+                }
                 is Message.SavingMessage ->
                     copy(
                         isSaving = msg.isSaving,

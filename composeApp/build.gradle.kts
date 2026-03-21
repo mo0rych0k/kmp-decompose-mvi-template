@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -17,7 +16,7 @@ kotlin {
     }
 
     targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.withType<Framework>().configureEach {
+        binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
             binaryOption("bundleId", appPackageName)
@@ -66,7 +65,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "$name.MainKt"
+        mainClass = "${appPackageName}.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

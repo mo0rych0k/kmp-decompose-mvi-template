@@ -2,6 +2,7 @@ package io.pylyp.weather.ui.skytrack.details
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,20 +48,17 @@ import io.pylyp.common.resources.label_wind
 import io.pylyp.common.resources.location_unknown
 import io.pylyp.common.resources.screen_details_title
 import io.pylyp.common.resources.value_mock_api
-import io.pylyp.common.resources.weather_cloudy
-import io.pylyp.common.resources.weather_overcast
-import io.pylyp.common.resources.weather_rain
-import io.pylyp.common.resources.weather_sunny
 import io.pylyp.common.resources.wind_north
 import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
-import io.pylyp.weather.domain.entity.WeatherTypeDD
 import io.pylyp.weather.domain.entity.WindDirectionDD
 import io.pylyp.weather.ui.skytrack.ObservationLocationBlock
+import io.pylyp.weather.ui.skytrack.add.toWeatherIconRes
 import io.pylyp.weather.ui.skytrack.details.store.SkyTrackDetailsStore
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -192,9 +192,23 @@ private fun DetailsContent(
             api = record.apiWindDescription ?: "—",
             delta = null,
         )
-        ComparisonRow(
+        ComparisonRowWithUserContent(
             label = stringResource(Res.string.label_weather_type),
-            user = weatherTypeLabel(record.userWeatherType),
+            userContent = {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    record.userWeatherTypes.forEach { type ->
+                        Icon(
+                            painter = painterResource(type.toWeatherIconRes()),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                            tint = AppColors.userDataAccent,
+                        )
+                    }
+                }
+            },
             api = record.apiDescription ?: stringResource(Res.string.value_mock_api),
             delta = null,
         )
@@ -256,21 +270,46 @@ private fun ComparisonRow(
 }
 
 @Composable
+private fun ComparisonRowWithUserContent(
+    label: String,
+    userContent: @Composable () -> Unit,
+    api: String,
+    delta: String?,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.weight(1f)) {
+                userContent()
+            }
+            Text(
+                text = api,
+                modifier = Modifier.weight(1f),
+                color = AppColors.apiDataAccent,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        if (delta != null) {
+            Text(
+                text = delta,
+                color = AppColors.error,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+}
+
+@Composable
 private fun windLabel(direction: WindDirectionDD): String {
     return if (direction == WindDirectionDD.NORTH) {
         stringResource(Res.string.wind_north)
     } else {
         direction.name
-    }
-}
-
-@Composable
-private fun weatherTypeLabel(type: WeatherTypeDD): String {
-    return when (type) {
-        WeatherTypeDD.SUNNY -> stringResource(Res.string.weather_sunny)
-        WeatherTypeDD.CLOUDY -> stringResource(Res.string.weather_cloudy)
-        WeatherTypeDD.OVERCAST -> stringResource(Res.string.weather_overcast)
-        WeatherTypeDD.RAIN -> stringResource(Res.string.weather_rain)
     }
 }
 

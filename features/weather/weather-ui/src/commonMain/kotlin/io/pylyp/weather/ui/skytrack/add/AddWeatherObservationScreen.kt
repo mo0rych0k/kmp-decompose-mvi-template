@@ -1,18 +1,24 @@
 package io.pylyp.weather.ui.skytrack.add
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,25 +41,29 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.pylyp.common.resources.Res
 import io.pylyp.common.resources.btn_save_observation
 import io.pylyp.common.resources.header_loading
-import io.pylyp.common.resources.header_now
+import io.pylyp.common.resources.label_place
 import io.pylyp.common.resources.label_temperature
-import io.pylyp.common.resources.label_weather_type
-import io.pylyp.common.resources.label_wind_direction
-import io.pylyp.common.resources.label_wind_strength
+import io.pylyp.common.resources.label_weather
+import io.pylyp.common.resources.btn_open_wind_setup
+import io.pylyp.common.resources.label_wind
 import io.pylyp.common.resources.observation_save_missing_background
 import io.pylyp.common.resources.screen_new_observation_title
-import io.pylyp.common.resources.weather_cloudy
-import io.pylyp.common.resources.weather_overcast
-import io.pylyp.common.resources.weather_rain
-import io.pylyp.common.resources.weather_sunny
-import io.pylyp.common.resources.wind_north
+import io.pylyp.common.resources.unit_celsius
+import io.pylyp.common.resources.unit_fahrenheit
 import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.domain.entity.WeatherTypeDD
-import io.pylyp.weather.domain.entity.WindDirectionDD
 import io.pylyp.weather.ui.skytrack.AddObservationLocationBlock
+import io.pylyp.weather.ui.skytrack.add.wind.WindDirectionStrengthScreen
+import io.pylyp.weather.ui.skytrack.add.wind.windDirectionDisplayName
 import io.pylyp.weather.ui.skytrack.add.store.AddWeatherObservationStore
 import io.pylyp.weather.ui.skytrack.add.store.SAVE_ERROR_MISSING_BACKGROUND_KEY
+import io.pylyp.weather.ui.skytrack.add.store.TemperatureUnit
 import io.pylyp.weather.ui.skytrack.temperatureSliderAccentColor
+import io.pylyp.weather.ui.skytrack.add.temperatureIconRes
+import io.pylyp.weather.ui.skytrack.add.toWeatherIconRes
+import io.pylyp.weather.ui.skytrack.add.weatherSectionIconRes
+import io.pylyp.weather.ui.skytrack.add.windIconRes
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,6 +73,23 @@ internal fun AddWeatherObservationScreen(
     modifier: Modifier = Modifier,
 ) {
     val state by component.state.subscribeAsState()
+    if (state.isWindSetupVisible) {
+        WindDirectionStrengthScreen(
+            windDirectionDegrees = state.windDirectionDegrees,
+            windStrengthPercent = state.userWindStrengthPercent,
+            windDirection = state.userWindDirection,
+            onWindDegreesChange = {
+                component.onIntent(AddWeatherObservationStore.Intent.WindDirectionDegreesIntent(it))
+            },
+            onWindStrengthChange = {
+                component.onIntent(AddWeatherObservationStore.Intent.WindStrengthChangedIntent(it))
+            },
+            onBack = { component.onIntent(AddWeatherObservationStore.Intent.CloseWindSetupIntent) },
+            modifier = modifier,
+        )
+        return
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -89,16 +117,28 @@ internal fun AddWeatherObservationScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = AppColors.primary,
+                )
+                Text(
+                    text = stringResource(Res.string.label_place),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
             Card(
                 colors = CardDefaults.cardColors(containerColor = AppColors.primary),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(Res.string.header_now),
-                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
                     val loadError = state.loadError
                     when {
                         loadError != null -> Text(
@@ -118,49 +158,170 @@ internal fun AddWeatherObservationScreen(
                 }
             }
 
-            TemperatureMetricCard(
-                label = stringResource(Res.string.label_temperature),
-                valueText = "${state.userTemperatureC.toInt()}°",
-                valueCelsius = state.userTemperatureC,
-                sliderValue = state.userTemperatureC.toFloat(),
-                onValueChange = {
-                    component.onIntent(AddWeatherObservationStore.Intent.TemperatureChangedIntent(it.toDouble()))
-                },
-                range = -30f..45f,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(temperatureIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = temperatureSliderAccentColor(state.userTemperatureC),
+                )
+                Text(
+                    text = stringResource(Res.string.label_temperature),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    val displayValue = when (state.temperatureUnit) {
+                        TemperatureUnit.CELSIUS -> state.userTemperatureC.toInt()
+                        TemperatureUnit.FAHRENHEIT -> (state.userTemperatureC * 9 / 5 + 32).toInt()
+                    }
+                    val displayUnit = stringResource(
+                        when (state.temperatureUnit) {
+                            TemperatureUnit.CELSIUS -> Res.string.unit_celsius
+                            TemperatureUnit.FAHRENHEIT -> Res.string.unit_fahrenheit
+                        },
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "$displayValue$displayUnit",
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Black,
+                            color = temperatureSliderAccentColor(state.userTemperatureC),
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            TemperatureUnit.entries.forEach { unit ->
+                                val isSelected = state.temperatureUnit == unit
+                                val label = when (unit) {
+                                    TemperatureUnit.CELSIUS -> stringResource(Res.string.unit_celsius)
+                                    TemperatureUnit.FAHRENHEIT -> stringResource(Res.string.unit_fahrenheit)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .border(
+                                            width = if (isSelected) 2.dp else 1.dp,
+                                            color = if (isSelected) AppColors.primary else MaterialTheme.colorScheme.outline.copy(
+                                                alpha = 0.5f,
+                                            ),
+                                            shape = MaterialTheme.shapes.small,
+                                        )
+                                        .background(
+                                            color = if (isSelected) AppColors.primary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(
+                                                alpha = 0.5f,
+                                            ),
+                                            shape = MaterialTheme.shapes.small,
+                                        )
+                                        .clickable {
+                                            if (!isSelected) {
+                                                component.onIntent(AddWeatherObservationStore.Intent.TemperatureUnitToggleIntent)
+                                            }
+                                        }
+                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                ) {
+                                    Text(
+                                        text = label,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (isSelected) AppColors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    Slider(
+                        value = state.userTemperatureC.toFloat(),
+                        onValueChange = {
+                            component.onIntent(AddWeatherObservationStore.Intent.TemperatureChangedIntent(it.toDouble()))
+                        },
+                        valueRange = -30f..45f,
+                        colors = SliderDefaults.colors(
+                            thumbColor = temperatureSliderAccentColor(state.userTemperatureC),
+                            activeTrackColor = temperatureSliderAccentColor(state.userTemperatureC),
+                            inactiveTrackColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.28f),
+                        ),
+                    )
+                }
+            }
 
-            Text(
-                text = stringResource(Res.string.label_wind_direction),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-            )
-            WindDirectionRow(
-                selected = state.userWindDirection,
-                onSelect = {
-                    component.onIntent(AddWeatherObservationStore.Intent.WindDirectionChangedIntent(it))
-                },
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(windIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = AppColors.primary,
+                )
+                Text(
+                    text = stringResource(Res.string.label_wind),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { component.onIntent(AddWeatherObservationStore.Intent.OpenWindSetupIntent) },
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = windDirectionDisplayName(state.userWindDirection),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = AppColors.primary,
+                    )
+                    Text(
+                        text = "${state.windDirectionDegrees.toInt()}° · ${state.userWindStrengthPercent}%",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = stringResource(Res.string.btn_open_wind_setup),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = AppColors.primary,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
+            }
 
-            MetricCard(
-                label = stringResource(Res.string.label_wind_strength),
-                valueText = "${state.userWindStrengthPercent}%",
-                valueColor = AppColors.primary,
-                sliderValue = state.userWindStrengthPercent.toFloat(),
-                onValueChange = {
-                    component.onIntent(AddWeatherObservationStore.Intent.WindStrengthChangedIntent(it.toInt()))
-                },
-                range = 0f..100f,
-            )
-
-            Text(
-                text = stringResource(Res.string.label_weather_type),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(weatherSectionIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = AppColors.primary,
+                )
+                Text(
+                    text = stringResource(Res.string.label_weather),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
             WeatherTypeRow(
-                selected = state.userWeatherType,
-                onSelect = {
-                    component.onIntent(AddWeatherObservationStore.Intent.WeatherTypeChangedIntent(it))
+                selected = state.userWeatherTypes,
+                onToggle = {
+                    component.onIntent(AddWeatherObservationStore.Intent.WeatherTypeToggledIntent(it))
                 },
             )
 
@@ -202,46 +363,6 @@ internal fun AddWeatherObservationScreen(
 }
 
 @Composable
-private fun TemperatureMetricCard(
-    label: String,
-    valueText: String,
-    valueCelsius: Double,
-    sliderValue: Float,
-    onValueChange: (Float) -> Unit,
-    range: ClosedFloatingPointRange<Float>,
-) {
-    val accent = temperatureSliderAccentColor(valueCelsius)
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                text = valueText,
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Black,
-                color = accent,
-            )
-            Slider(
-                value = sliderValue,
-                onValueChange = onValueChange,
-                valueRange = range,
-                colors = SliderDefaults.colors(
-                    thumbColor = accent,
-                    activeTrackColor = accent,
-                    inactiveTrackColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.28f),
-                ),
-            )
-        }
-    }
-}
-
-@Composable
 private fun MetricCard(
     label: String,
     valueText: String,
@@ -276,51 +397,38 @@ private fun MetricCard(
 }
 
 @Composable
-private fun WindDirectionRow(
-    selected: WindDirectionDD,
-    onSelect: (WindDirectionDD) -> Unit,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        WindDirectionDD.entries.forEach { dir ->
-            val label = when (dir) {
-                WindDirectionDD.NORTH -> stringResource(Res.string.wind_north)
-                else -> dir.name
-            }
-            Text(
-                text = if (dir == selected) "▶ $label" else "  $label",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onSelect(dir) }
-                    .padding(vertical = 4.dp),
-                color = if (dir == selected) AppColors.primary else MaterialTheme.colorScheme.onSurface,
-                fontWeight = if (dir == selected) FontWeight.Bold else FontWeight.Normal,
-            )
-        }
-    }
-}
-
-@Composable
 private fun WeatherTypeRow(
-    selected: WeatherTypeDD,
-    onSelect: (WeatherTypeDD) -> Unit,
+    selected: Set<WeatherTypeDD>,
+    onToggle: (WeatherTypeDD) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         WeatherTypeDD.entries.forEach { type ->
-            val label = when (type) {
-                WeatherTypeDD.SUNNY -> stringResource(Res.string.weather_sunny)
-                WeatherTypeDD.CLOUDY -> stringResource(Res.string.weather_cloudy)
-                WeatherTypeDD.OVERCAST -> stringResource(Res.string.weather_overcast)
-                WeatherTypeDD.RAIN -> stringResource(Res.string.weather_rain)
-            }
-            Text(
-                text = if (type == selected) "▶ $label" else "  $label",
+            val isSelected = type in selected
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onSelect(type) }
-                    .padding(vertical = 4.dp),
-                color = if (type == selected) AppColors.primary else MaterialTheme.colorScheme.onSurface,
-                fontWeight = if (type == selected) FontWeight.Bold else FontWeight.Normal,
-            )
+                    .size(56.dp)
+                    .border(
+                        width = if (isSelected) 2.dp else 1.dp,
+                        color = if (isSelected) AppColors.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .background(
+                        color = if (isSelected) AppColors.primary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surface,
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                    .clickable { onToggle(type) },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(type.toWeatherIconRes()),
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp),
+                    tint = if (isSelected) AppColors.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

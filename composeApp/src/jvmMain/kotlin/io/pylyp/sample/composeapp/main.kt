@@ -8,11 +8,12 @@ import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import io.pylyp.common.core.di.ComponentFactory
 import io.pylyp.common.core.di.IsolatedKoinContext.koin
+import io.pylyp.sample.composeapp.di.bootstrapPlatformKoin
 import io.pylyp.sample.composeapp.di.createAppRootComponent
-import io.pylyp.sample.composeapp.di.initKoinInPlatform
 import javax.swing.SwingUtilities
 
 public fun main() {
+    bootstrapPlatformKoin()
 
     val lifecycle = LifecycleRegistry()
     val componentFactory: ComponentFactory by koin().inject()
@@ -24,7 +25,6 @@ public fun main() {
     }
 
     application {
-        initKoinInPlatform()
         val windowState = rememberWindowState()
 
         LifecycleController(lifecycle, windowState)

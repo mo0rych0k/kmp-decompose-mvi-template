@@ -20,7 +20,7 @@ public data class SaveWeatherObservationParams(
     public val userTemperatureC: Double,
     public val userWindDirection: WindDirectionDD,
     public val userWindStrengthPercent: Int,
-    public val userWeatherType: WeatherTypeDD,
+    public val userWeatherTypes: Set<WeatherTypeDD>,
     public val apiWeather: CommonWeatherDD,
 )
 
@@ -51,7 +51,7 @@ public class SaveWeatherObservationUseCase(
             userPressureMmHg = parameters.apiWeather.pressureMmHg?.roundToInt()?.coerceIn(680, 820) ?: 760,
             userWindDirection = parameters.userWindDirection,
             userWindStrengthPercent = parameters.userWindStrengthPercent.coerceIn(0, 100),
-            userWeatherType = parameters.userWeatherType,
+            userWeatherTypes = parameters.userWeatherTypes,
             apiTemperatureC = parameters.apiWeather.temperatureC,
             apiHumidityPercent = parameters.apiWeather.humidityPercent,
             apiPressureMmHg = parameters.apiWeather.pressureMmHg,

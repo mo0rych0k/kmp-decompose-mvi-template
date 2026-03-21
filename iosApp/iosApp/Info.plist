@@ -4,5 +4,9 @@
     <dict>
         <key>CADisableMinimumFrameDurationOnPhone</key>
         <true />
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Location is used to fill in observation coordinates, resolve place names, and load
+            weather for where you are.
+        </string>
     </dict>
 </plist>

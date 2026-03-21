@@ -31,18 +31,34 @@
     <string name="location_unknown">Location unknown</string>
     <string name="status_large_difference">Large difference</string>
     <string name="label_temperature">Temperature</string>
+    <string name="unit_celsius">°C</string>
+    <string name="unit_fahrenheit">°F</string>
     <string name="label_vs">vs</string>
     <string name="label_difference">Difference</string>
 
     <!-- New observation -->
     <string name="screen_new_observation_title">New observation</string>
-    <string name="header_now">Now</string>
+    <string name="label_place">Place</string>
     <string name="header_loading">Loading…</string>
     <string name="label_wind_direction">Wind direction</string>
     <string name="label_wind_strength">Wind strength</string>
     <string name="wind_north">North (N)</string>
+    <string name="wind_northeast">Northeast (NE)</string>
+    <string name="wind_east">East (E)</string>
+    <string name="wind_southeast">Southeast (SE)</string>
+    <string name="wind_south">South (S)</string>
+    <string name="wind_southwest">Southwest (SW)</string>
+    <string name="wind_west">West (W)</string>
+    <string name="wind_northwest">Northwest (NW)</string>
+    <string name="screen_wind_setup_title">Wind direction &amp; strength</string>
+    <string name="wind_setup_compass_hint">Hold the device flat. The compass rose turns so N matches real north (when available).</string>
+    <string name="wind_setup_drag_hint">Drag on the dial to point the arrow where the wind blows from.</string>
+    <string name="btn_open_wind_setup">Set wind…</string>
+    <string name="wind_heading_unavailable">Compass heading unavailable — use the dial visually.</string>
+    <string name="wind_azimuth_caption">%1$d° — wind from compass bearing</string>
     <string name="label_humidity">Humidity</string>
     <string name="label_weather_type">Weather type</string>
+    <string name="label_weather">Weather</string>
     <string name="weather_sunny">Sunny</string>
     <string name="weather_cloudy">Cloudy</string>
     <string name="weather_overcast">Overcast</string>
