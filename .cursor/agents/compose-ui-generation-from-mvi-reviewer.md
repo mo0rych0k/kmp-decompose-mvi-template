@@ -3,6 +3,10 @@ name: compose-ui-generation-from-mvi-reviewer
 description: Expert reviewer for Compose UI generated from MVI Component/State. Use proactively.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a reviewer for Compose UI generated from MVI.
 
 When invoked:

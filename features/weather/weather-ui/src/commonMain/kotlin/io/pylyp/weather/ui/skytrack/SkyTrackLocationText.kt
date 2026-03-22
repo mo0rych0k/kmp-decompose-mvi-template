@@ -84,8 +84,8 @@ internal fun AddObservationLocationBlock(
     when {
         isLoadingBackground -> Text(
             text = loadingText,
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Black,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
             color = color,
         )
 
@@ -94,7 +94,7 @@ internal fun AddObservationLocationBlock(
             locationLabel?.takeIf { it.isNotBlank() }?.let { place ->
                 Text(
                     text = place,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = color.copy(alpha = 0.9f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -102,9 +102,9 @@ internal fun AddObservationLocationBlock(
             }
             Text(
                 text = formatShortCoordinates(coordinates),
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Black,
-                color = color,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Medium,
+                color = color.copy(alpha = 0.9f),
             )
         }
     }

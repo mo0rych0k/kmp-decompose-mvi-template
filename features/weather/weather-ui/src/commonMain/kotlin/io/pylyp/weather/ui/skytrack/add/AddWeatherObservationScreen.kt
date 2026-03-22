@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -45,24 +47,31 @@ import io.pylyp.common.resources.label_place
 import io.pylyp.common.resources.label_temperature
 import io.pylyp.common.resources.label_weather
 import io.pylyp.common.resources.btn_open_wind_setup
+import io.pylyp.common.resources.label_precipitation
 import io.pylyp.common.resources.label_wind
 import io.pylyp.common.resources.observation_save_missing_background
 import io.pylyp.common.resources.screen_new_observation_title
 import io.pylyp.common.resources.unit_celsius
 import io.pylyp.common.resources.unit_fahrenheit
+import io.pylyp.common.resources.wind_add_data
+import io.pylyp.common.resources.wind_still
 import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.domain.entity.WeatherTypeDD
 import io.pylyp.weather.ui.skytrack.AddObservationLocationBlock
+import io.pylyp.weather.ui.skytrack.WindStrengthIcons
 import io.pylyp.weather.ui.skytrack.add.wind.WindDirectionStrengthScreen
 import io.pylyp.weather.ui.skytrack.add.wind.windDirectionDisplayName
 import io.pylyp.weather.ui.skytrack.add.store.AddWeatherObservationStore
 import io.pylyp.weather.ui.skytrack.add.store.SAVE_ERROR_MISSING_BACKGROUND_KEY
 import io.pylyp.weather.ui.skytrack.add.store.TemperatureUnit
 import io.pylyp.weather.ui.skytrack.temperatureSliderAccentColor
+import io.pylyp.weather.ui.skytrack.add.cloudinessTypes
+import io.pylyp.weather.ui.skytrack.add.precipitationSectionIconRes
+import io.pylyp.weather.ui.skytrack.add.precipitationTypes
 import io.pylyp.weather.ui.skytrack.add.temperatureIconRes
 import io.pylyp.weather.ui.skytrack.add.toWeatherIconRes
 import io.pylyp.weather.ui.skytrack.add.weatherSectionIconRes
-import io.pylyp.weather.ui.skytrack.add.windIconRes
+import io.pylyp.weather.ui.skytrack.add.windSectionIconRes
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -78,13 +87,14 @@ internal fun AddWeatherObservationScreen(
             windDirectionDegrees = state.windDirectionDegrees,
             windStrengthPercent = state.userWindStrengthPercent,
             windDirection = state.userWindDirection,
-            onWindDegreesChange = {
-                component.onIntent(AddWeatherObservationStore.Intent.WindDirectionDegreesIntent(it))
+            onWindDegreesChange = { deg ->
+                component.onIntent(AddWeatherObservationStore.Intent.WindDirectionDegreesIntent(deg))
             },
-            onWindStrengthChange = {
-                component.onIntent(AddWeatherObservationStore.Intent.WindStrengthChangedIntent(it))
+            onWindStrengthChange = { pct ->
+                component.onIntent(AddWeatherObservationStore.Intent.WindStrengthChangedIntent(pct))
             },
             onBack = { component.onIntent(AddWeatherObservationStore.Intent.CloseWindSetupIntent) },
+            onSave = { component.onIntent(AddWeatherObservationStore.Intent.CloseWindSetupIntent) },
             modifier = modifier,
         )
         return
@@ -136,15 +146,22 @@ internal fun AddWeatherObservationScreen(
             }
             Card(
                 colors = CardDefaults.cardColors(containerColor = AppColors.primary),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 72.dp),
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                        .heightIn(min = 48.dp),
+                ) {
                     val loadError = state.loadError
                     when {
                         loadError != null -> Text(
                             text = loadError,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodySmall,
                         )
 
                         else -> AddObservationLocationBlock(
@@ -263,7 +280,7 @@ internal fun AddWeatherObservationScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
-                    painter = painterResource(windIconRes),
+                    painter = painterResource(windSectionIconRes),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                     tint = AppColors.primary,
@@ -280,18 +297,46 @@ internal fun AddWeatherObservationScreen(
                     .clickable { component.onIntent(AddWeatherObservationStore.Intent.OpenWindSetupIntent) },
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = windDirectionDisplayName(state.userWindDirection),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.primary,
-                    )
-                    Text(
-                        text = "${state.windDirectionDegrees.toInt()}° · ${state.userWindStrengthPercent}%",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .heightIn(min = 72.dp),
+                ) {
+                    if (state.userWindStrengthPercent == 0) {
+                        Text(
+                            text = stringResource(Res.string.wind_add_data),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.primary,
+                        )
+                        Text(
+                            text = stringResource(Res.string.wind_still),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text = windDirectionDisplayName(state.userWindDirection),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = AppColors.primary,
+                            )
+                            WindStrengthIcons(
+                                percent = state.userWindStrengthPercent,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                iconSize = 18.dp,
+                            )
+                        }
+                        Text(
+                            text = "${state.windDirectionDegrees.toInt()}°",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                     Text(
                         text = stringResource(Res.string.btn_open_wind_setup),
                         style = MaterialTheme.typography.labelMedium,
@@ -319,6 +364,32 @@ internal fun AddWeatherObservationScreen(
                 )
             }
             WeatherTypeRow(
+                types = cloudinessTypes,
+                selected = state.userWeatherTypes,
+                onToggle = {
+                    component.onIntent(AddWeatherObservationStore.Intent.WeatherTypeToggledIntent(it))
+                },
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(precipitationSectionIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = AppColors.primary,
+                )
+                Text(
+                    text = stringResource(Res.string.label_precipitation),
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            WeatherTypeRow(
+                types = precipitationTypes,
                 selected = state.userWeatherTypes,
                 onToggle = {
                     component.onIntent(AddWeatherObservationStore.Intent.WeatherTypeToggledIntent(it))
@@ -340,6 +411,7 @@ internal fun AddWeatherObservationScreen(
                     state.loadError == null &&
                     state.apiData != null &&
                     state.coordinates != null &&
+                    state.userWeatherTypes.isNotEmpty() &&
                     !state.isSaving,
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -398,14 +470,17 @@ private fun MetricCard(
 
 @Composable
 private fun WeatherTypeRow(
+    types: List<WeatherTypeDD>,
     selected: Set<WeatherTypeDD>,
     onToggle: (WeatherTypeDD) -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        WeatherTypeDD.entries.forEach { type ->
+        types.forEach { type ->
             val isSelected = type in selected
             Box(
                 modifier = Modifier

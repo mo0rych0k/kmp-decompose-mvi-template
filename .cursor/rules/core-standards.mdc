@@ -46,7 +46,5 @@ You are an expert KMP Developer. These rules apply to the entire project. Specif
 - **Reusability:** Prefer small, reusable UI components in the `uikit` or `common-ui` module.
 
 ## 7. Sub-Agent Coordination
-- When working on a specific layer, refer to the following sub-agent rules (to be added):
-    - **UI Agent:** Focus on Compose/Decompose UI.
-    - **Domain Agent:** Focus on UseCases and Business Logic.
-    - **Data/Network/Storage Agent:** Focus on Repositories, DTOs, and Persistence.
+- When working on a specific layer, use the matching rule under `.cursor/rules/` (e.g. UI navigation/DI, MVI state, domain Resource, data mappers, Ktor dispatchers, Room) and the corresponding prompt in `.cursor/agents/`.
+- **Output density:** Follow `.cursor/rules/token-efficiency.mdc` — prefer file paths and symbol names over long quotes; avoid repeating global architecture in every reply.

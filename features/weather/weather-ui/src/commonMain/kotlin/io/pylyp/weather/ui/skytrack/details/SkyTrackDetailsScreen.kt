@@ -49,11 +49,14 @@ import io.pylyp.common.resources.location_unknown
 import io.pylyp.common.resources.screen_details_title
 import io.pylyp.common.resources.value_mock_api
 import io.pylyp.common.resources.wind_north
+import io.pylyp.common.resources.wind_still
 import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
 import io.pylyp.weather.domain.entity.WindDirectionDD
 import io.pylyp.weather.ui.skytrack.ObservationLocationBlock
+import io.pylyp.weather.ui.skytrack.add.windSectionIconRes
 import io.pylyp.weather.ui.skytrack.add.toWeatherIconRes
+import io.pylyp.weather.ui.skytrack.WindStrengthIcons
 import io.pylyp.weather.ui.skytrack.details.store.SkyTrackDetailsStore
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -186,9 +189,43 @@ private fun DetailsContent(
             api = formatTempNullable(record.apiTemperatureC),
             delta = "${abs(record.temperatureDeltaC).toInt()}°",
         )
-        ComparisonRow(
+        ComparisonRowWithUserContent(
             label = stringResource(Res.string.label_wind),
-            user = "${windLabel(record.userWindDirection)} · ${record.userWindStrengthPercent}%",
+            labelLeadingIcon = {
+                Icon(
+                    painter = painterResource(windSectionIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+            userContent = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    if (record.userWindStrengthPercent == 0) {
+                        Text(
+                            text = stringResource(Res.string.wind_still),
+                            color = AppColors.userDataAccent,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    } else {
+                        Text(
+                            text = windLabel(record.userWindDirection),
+                            color = AppColors.userDataAccent,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                        WindStrengthIcons(
+                            percent = record.userWindStrengthPercent,
+                            tint = AppColors.userDataAccent,
+                            iconSize = 18.dp,
+                        )
+                    }
+                }
+            },
             api = record.apiWindDescription ?: "—",
             delta = null,
         )
@@ -272,16 +309,23 @@ private fun ComparisonRow(
 @Composable
 private fun ComparisonRowWithUserContent(
     label: String,
+    labelLeadingIcon: @Composable (() -> Unit)? = null,
     userContent: @Composable () -> Unit,
     api: String,
     delta: String?,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            labelLeadingIcon?.invoke()
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.weight(1f)) {
                 userContent()

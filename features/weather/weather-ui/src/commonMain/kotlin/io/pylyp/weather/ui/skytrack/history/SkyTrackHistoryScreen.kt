@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,6 +39,7 @@ import io.pylyp.common.resources.label_difference
 import io.pylyp.common.resources.label_temperature
 import io.pylyp.common.resources.label_vs
 import io.pylyp.common.resources.label_wind_strength
+import io.pylyp.common.resources.wind_still
 import io.pylyp.common.resources.location_unknown
 import io.pylyp.common.resources.observation_empty_description
 import io.pylyp.common.resources.observation_empty_title
@@ -46,7 +48,10 @@ import io.pylyp.common.resources.status_large_difference
 import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
 import io.pylyp.weather.ui.skytrack.ObservationLocationBlock
+import io.pylyp.weather.ui.skytrack.WindStrengthIcons
+import io.pylyp.weather.ui.skytrack.add.windSectionIconRes
 import io.pylyp.weather.ui.skytrack.history.store.SkyTrackHistoryStore
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 import kotlin.time.Instant
@@ -167,11 +172,35 @@ private fun ObservationListItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 unknownLabel = stringResource(Res.string.location_unknown),
             )
-            Text(
-                text = stringResource(Res.string.label_wind_strength) + ": ${record.userWindStrengthPercent}%",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(windSectionIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = stringResource(Res.string.label_wind_strength) + ":",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                if (record.userWindStrengthPercent == 0) {
+                    Text(
+                        text = stringResource(Res.string.wind_still),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    WindStrengthIcons(
+                        percent = record.userWindStrengthPercent,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        iconSize = 14.dp,
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

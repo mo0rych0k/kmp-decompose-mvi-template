@@ -231,7 +231,7 @@ internal class AddWeatherObservationStoreFactory(
 
                 is Message.WeatherTypeToggledMessage -> {
                     val next = if (msg.value in userWeatherTypes) {
-                        if (userWeatherTypes.size > 1) userWeatherTypes - msg.value else userWeatherTypes
+                        userWeatherTypes - msg.value
                     } else {
                         userWeatherTypes + msg.value
                     }
