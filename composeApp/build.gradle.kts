@@ -36,6 +36,7 @@ kotlin {
             implementation(projects.common.coreNetwork)
             implementation(projects.common.coreThreading)
             implementation(projects.common.persistence.persistenceDatabase)
+            implementation(projects.common.shareKit)
 
             /*feature-cover*/
             implementation(projects.features.cover.coverUi)

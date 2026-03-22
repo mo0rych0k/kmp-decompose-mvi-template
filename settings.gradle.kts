@@ -40,6 +40,7 @@ include(":server")
 
 include(
     ":common:core-di",
+    ":common:share-kit",
     ":common:core-navigation",
     ":common:core-network",
     ":common:core-threading",

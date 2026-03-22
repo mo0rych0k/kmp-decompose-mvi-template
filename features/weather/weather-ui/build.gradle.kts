@@ -18,6 +18,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization)
             implementation(projects.common.coreUi)
+            implementation(projects.common.shareKit)
             implementation(projects.common.resources)
             implementation(projects.features.weather.weatherDomain)
         }

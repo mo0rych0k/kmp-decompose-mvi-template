@@ -14,6 +14,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.pylyp.common.core.di.IsolatedKoinContext
 import io.pylyp.weather.ui.skytrack.add.AddWeatherObservationScreen
+import io.pylyp.weather.ui.skytrack.calendar.SkyTrackCalendarScreen
 import io.pylyp.weather.ui.skytrack.details.SkyTrackDetailsScreen
 import io.pylyp.weather.ui.skytrack.history.SkyTrackHistoryScreen
 import org.koin.compose.KoinIsolatedContext
@@ -35,6 +36,11 @@ public fun SkyTrackRootMain(
             ) {
                 when (val child = it.instance) {
                     is SkyTrackHistoryChild -> SkyTrackHistoryScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        component = child.component,
+                    )
+
+                    is SkyTrackCalendarChild -> SkyTrackCalendarScreen(
                         modifier = Modifier.fillMaxSize(),
                         component = child.component,
                     )

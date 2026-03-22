@@ -9,6 +9,8 @@ import io.pylyp.common.core.foundation.entity.Resource
 import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
 import io.pylyp.weather.domain.usecase.DeleteWeatherObservationUseCase
 import io.pylyp.weather.domain.usecase.GetWeatherObservationByIdUseCase
+import io.pylyp.weather.ui.skytrack.model.WeatherObservationRecordUi
+import io.pylyp.weather.ui.skytrack.model.toWeatherObservationRecordUi
 import kotlinx.coroutines.launch
 
 internal class SkyTrackDetailsStoreFactory(
@@ -33,7 +35,7 @@ internal class SkyTrackDetailsStoreFactory(
     }
 
     private sealed interface Message {
-        data class LoadedMessage(val record: WeatherObservationRecordDD?) : Message
+        data class LoadedMessage(val record: WeatherObservationRecordUi?) : Message
         data class ErrorMessage(val message: String) : Message
         data class LoadingMessage(val isLoading: Boolean) : Message
     }
@@ -75,7 +77,11 @@ internal class SkyTrackDetailsStoreFactory(
                         Resource.Loading -> dispatch(Message.LoadingMessage(isLoading = true))
                         is Resource.Success -> {
                             dispatch(Message.LoadingMessage(isLoading = false))
-                            dispatch(Message.LoadedMessage(record = resource.data))
+                            dispatch(
+                                Message.LoadedMessage(
+                                    record = resource.data?.toWeatherObservationRecordUi(),
+                                ),
+                            )
                         }
 
                         is Resource.Error -> {

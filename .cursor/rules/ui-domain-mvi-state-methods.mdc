@@ -34,6 +34,8 @@ alwaysApply: false
 ## 4) Domain -> UI mapping belongs in UI module
 - Domain entities/results must be mapped to UI entities/state using UI mappers inside `*-ui`:
   - e.g. `CoffeeImageDD.toUi()`, `*Data -> *UiData`
+- UI-layer data classes used in `State` or passed to composables must be annotated with `@Immutable` (see `.cursor/rules/compose-component-architecture.mdc`).
+- Composables must not take domain model types as parameters; only UI models, primitives, and callbacks.
 - UI must not import persistence/network types and should not reference storage DTOs directly.
 - Domain must not depend on UI entities/state.
 

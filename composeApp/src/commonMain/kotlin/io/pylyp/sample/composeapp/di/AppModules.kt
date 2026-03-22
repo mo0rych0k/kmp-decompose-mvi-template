@@ -7,6 +7,7 @@ import io.pylyp.coffee.data.network.di.coffeeDataNetworkModule
 import io.pylyp.coffee.domain.di.coffeeDomainModule
 import io.pylyp.common.core.persistence.di.persistenceDatabaseModule
 import io.pylyp.common.core.persistence.di.persistenceDatabasePlatformModule
+import io.pylyp.common.sharekit.di.shareModule
 import io.pylyp.core.threading.di.coreThreadingModule
 import io.pylyp.weather.data.di.weatherDataModule
 import io.pylyp.weather.data.network.di.weatherDataNetworkModule
@@ -20,6 +21,7 @@ internal val appModules: List<Module> = listOf(
     coreThreadingModule,
     persistenceDatabaseModule,
     persistenceDatabasePlatformModule,
+    shareModule,
 
     coffeeDataModule,
     coffeeDataNetworkModule,

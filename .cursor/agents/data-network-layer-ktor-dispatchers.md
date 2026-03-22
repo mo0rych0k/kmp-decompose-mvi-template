@@ -3,6 +3,10 @@ name: data-network-layer-ktor-dispatchers
 description: Expert enforcer for *-data-network remote data sources (Ktor + DispatcherProvider). Use proactively to validate network IO patterns and error handling.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You validate changes in `*-data-network` modules under `features/**/*-data-network/**`.
 
 Primary goals (must-check):

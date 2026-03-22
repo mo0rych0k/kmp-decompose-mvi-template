@@ -73,9 +73,11 @@ For each selected subagent:
 
 ### 4) Output
 
-Summarize:
+Summarize **compactly** (see `.cursor/rules/token-efficiency.mdc`):
 
-- chosen categories + subagents that were actually run
-- the main issues fixed (if any)
-- any remaining risks/testing gaps
+- chosen categories + subagents that were actually run (names only)
+- main fixes as **paths + one line each** (if any)
+- remaining risks in one short bullet list
+
+Avoid pasting full subagent transcripts; prefer “reviewer said X about `path:symbol`”.
 

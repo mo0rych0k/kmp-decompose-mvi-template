@@ -1,7 +1,8 @@
 package io.pylyp.weather.ui.skytrack.details.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
-import io.pylyp.weather.domain.entity.WeatherObservationRecordDD
+import io.pylyp.weather.ui.skytrack.model.WeatherObservationRecordUi
 
 internal interface SkyTrackDetailsStore :
     Store<SkyTrackDetailsStore.Intent, SkyTrackDetailsStore.State, SkyTrackDetailsStore.Label> {
@@ -11,9 +12,10 @@ internal interface SkyTrackDetailsStore :
         data object RetryIntent : Intent
     }
 
+    @Immutable
     data class State(
         val recordId: Long,
-        val record: WeatherObservationRecordDD? = null,
+        val record: WeatherObservationRecordUi? = null,
         val isLoading: Boolean = true,
         val errorMessage: String? = null,
     )
