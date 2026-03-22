@@ -34,14 +34,14 @@ internal interface AddWeatherObservationStore :
         /** Reverse-geocoded locality (mobile). */
         val locationLabel: String? = null,
         val loadError: String? = null,
-        val userTemperatureC: Double = 20.0,
+        val userTemperatureC: Double = 0.0,
         val temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
-        val userWindStrengthPercent: Int = 30,
+        val userWindStrengthPercent: Int = 0,
         val userWindDirection: WindDirectionDD = WindDirectionDD.NORTH,
         /** 0° = from north, clockwise; kept in sync with [userWindDirection] when using the wind screen. */
         val windDirectionDegrees: Float = 0f,
         val isWindSetupVisible: Boolean = false,
-        val userWeatherTypes: Set<WeatherTypeDD> = setOf(WeatherTypeDD.SUNNY),
+        val userWeatherTypes: Set<WeatherTypeDD> = emptySet(),
         val isSaving: Boolean = false,
         /** Set when persistence fails after Save; cleared on next save attempt. */
         val saveError: String? = null,

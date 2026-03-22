@@ -1,0 +1,39 @@
+---
+description: Concise agent outputs — paths over prose, minimal duplication (KMP template)
+alwaysApply: true
+---
+
+# Token-efficient collaboration (this repo)
+
+Goal: **shorter turns** without lowering correctness. Applies to the main assistant and to subagents.
+
+## Responses
+
+- **Verdict first:** one short line (e.g. “OK / needs fixes / blocked by …”) before details.
+- **Prefer pointers over paste:** give `path/to/File.kt` + class/function name; quote code only when the snippet is new, non-obvious, or requested.
+- **No architecture essays:** global rules live in `.cursor/rules/core-standards.mdc` — do not restate them unless the user asks or a rule is violated.
+- **Lists, not paragraphs:** bullets for findings; one sentence per item unless an exception needs two.
+- **Locales:** `common/resources/src/commonMain/composeResources/` (`values/`, `values-*/`, `drawable/`). Mention the resource file, not full XML, unless editing it.
+
+## Where to look (reduce search tokens)
+
+| Area | Typical paths |
+|------|----------------|
+| App shell, navigation, DI | `composeApp/`, `common/core-navigation/` |
+| Shared UI / theme | `common/uikit/`, `common/resources/` |
+| Feature modules | `features/<name>/<name>-{ui,domain,data,data-network}/` |
+| Build / convention | `build-logic/`, `gradle/libs.versions.toml` |
+| Layer-specific rules | `.cursor/rules/*.mdc` (e.g. `ui-layer-decompose-mvi-navigation-di.mdc`) |
+| Subagent prompts | `.cursor/agents/*.md` |
+
+## Reviews & loops
+
+- **Critical vs noise:** state blocking issues first; group non-blocking items.
+- **Between subagents:** pass **paths + symbol names + one-line intent**; avoid forwarding huge prior transcripts.
+- **Diffs:** show only changed hunks or the minimal excerpt that proves the fix.
+
+## When *not* to compress
+
+- Security-sensitive or correctness-critical edge cases (say them fully).
+- User explicitly asked for “detailed”, “explain”, or “step by step”.
+- First-time wiring of a **new** feature into the app (list touched integration files — can be a compact bullet list).

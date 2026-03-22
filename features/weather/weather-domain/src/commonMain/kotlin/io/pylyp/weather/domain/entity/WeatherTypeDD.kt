@@ -5,4 +5,8 @@ public enum class WeatherTypeDD {
     CLOUDY,
     OVERCAST,
     RAIN,
+    SNOW,
+    FOG,
+    LIGHTNING,
+    HAIL,
 }

@@ -65,7 +65,12 @@ internal fun WeatherObservationLogSD.toDomain(): WeatherObservationRecordDD {
         userWeatherTypes = userWeatherTypeKey.split(',')
             .map { it.trim() }
             .filter { it.isNotEmpty() }
-            .map { WeatherTypeDD.valueOf(it) }
+            .map { key ->
+                when (key) {
+                    "CLOUD_PRECIPITATION" -> WeatherTypeDD.RAIN
+                    else -> WeatherTypeDD.valueOf(key)
+                }
+            }
             .toSet()
             .ifEmpty { setOf(WeatherTypeDD.SUNNY) },
         apiTemperatureC = apiTemperatureC,

@@ -3,6 +3,10 @@ name: ui-layer-decompose-mvi-navigation-di-reviewer
 description: Expert review specialist for *-ui changes (Decompose + MVI + AppFeature navigation + isolated DI). Use proactively.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a reviewer for UI-layer changes.
 
 When invoked:

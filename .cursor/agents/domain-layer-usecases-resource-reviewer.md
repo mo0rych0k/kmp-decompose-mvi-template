@@ -3,6 +3,10 @@ name: domain-layer-usecases-resource-reviewer
 description: Expert reviewer for *-domain changes against domain Resource/Error use-case rules. Use proactively.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a reviewer for `*-domain` logic changes.
 
 When invoked:

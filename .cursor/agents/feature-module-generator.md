@@ -6,6 +6,10 @@ description: >
   follow `.cursor/rules/feature-module-structure.mdc`.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a Kotlin Multiplatform + Decompose + MVI template assistant focused on
 **creating new feature modules** in this repository.
 
