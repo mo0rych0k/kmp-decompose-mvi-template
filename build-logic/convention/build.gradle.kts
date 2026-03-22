@@ -23,10 +23,6 @@ gradlePlugin {
             id = "io.pylyp.kotlin.multiplatform"
             implementationClass = "KotlinMultiplatformConventionPlugin"
         }
-        register("kotlinMultiplatformLibrary") {
-            id = "io.pylyp.kotlin.multiplatformLibrary"
-            implementationClass = "KotlinMultiplatformLibraryConventionPlugin"
-        }
         register("composeMultiplatform") {
             id = "io.pylyp.kotlin.composeMultiplatform"
             implementationClass = "ComposeMultiplatformConventionPlugin"

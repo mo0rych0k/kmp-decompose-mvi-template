@@ -6,7 +6,7 @@ internal interface CoverStore : Store<CoverStore.Intent, CoverStore.State, Cover
     sealed interface Intent {
         data object BackPressedIntent : Intent
         data object OnNavigateToCoffeeIntent : Intent
-        data object OnNavigateToWeatherIntent : Intent
+        data object OnNavigateToSkyTrackIntent : Intent
     }
 
     data class State(
@@ -16,6 +16,6 @@ internal interface CoverStore : Store<CoverStore.Intent, CoverStore.State, Cover
     sealed interface Label {
         data object BackPressedLabel : Label
         data object OnNavigateToCoffeeLabel : Label
-        data object OnNavigateToWeatherLabel : Label
+        data object OnNavigateToSkyTrackLabel : Label
     }
 }

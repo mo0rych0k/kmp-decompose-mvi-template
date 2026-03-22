@@ -14,6 +14,7 @@ kotlin {
             implementation(libs.kotlinx.serialization)
             implementation(projects.common.coreDi)
             implementation(projects.common.coreNetwork)
+            implementation(projects.common.coreThreading)
         }
 
         commonTest.dependencies {
@@ -26,4 +27,3 @@ kotlin {
         }
     }
 }
-

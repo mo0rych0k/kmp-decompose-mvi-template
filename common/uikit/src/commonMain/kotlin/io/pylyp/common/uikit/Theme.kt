@@ -29,7 +29,7 @@ public object AppColors {
     /** “My observations” / user-reported values. */
     public val userDataAccent: Color = Color(0xFF3B82F6)
 
-    /** OpenWeather / API column. */
+    /** Open-Meteo / API column. */
     public val apiDataAccent: Color = Color(0xFF4ADE80)
 
     /** Errors, destructive actions, “large difference” alerts. */

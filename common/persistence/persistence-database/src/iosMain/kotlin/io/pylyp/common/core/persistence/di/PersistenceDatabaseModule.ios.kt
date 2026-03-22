@@ -1,21 +1,22 @@
 package io.pylyp.common.core.persistence.di
 
-import androidx.room.Room.databaseBuilder
+import androidx.room.Room
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.pylyp.common.core.persistence.AppDatabase
-import kotlinx.cinterop.ExperimentalForeignApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
+import kotlinx.cinterop.ExperimentalForeignApi
 
 
 public actual val persistenceDatabasePlatformModule: Module = module {
     single<AppDatabase> {
         val dbFilePath = documentDirectory() + "/$DB_NAME"
-        databaseBuilder<AppDatabase>(
-            name = dbFilePath,
-        ).build()
+        Room.databaseBuilder<AppDatabase>(name = dbFilePath)
+            .setDriver(BundledSQLiteDriver())
+            .build()
     }
 }
 

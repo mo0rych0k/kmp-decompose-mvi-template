@@ -1,25 +1,25 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.app.kotlinMultiplatform)
     alias(libs.plugins.app.composeMultiplatform)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinxSerialization)
 }
 
+val appPackageName = "io.pylyp.sample.composeapp"
+
 kotlin {
     androidLibrary {
-        namespace = "io.pylyp.sample.composeapp"
+        namespace = appPackageName
         compileSdk = libs.versions.android.compileSdk.get().toInt()
     }
 
     targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.withType<Framework>().configureEach {
+        binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            binaryOption("bundleId", "io.pylyp.sample.composeapp")
+            binaryOption("bundleId", appPackageName)
         }
     }
 
@@ -59,18 +59,17 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-
         }
     }
 }
 
 compose.desktop {
     application {
-        mainClass = "io.pylyp.sample.composeapp.MainKt"
+        mainClass = "${appPackageName}.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "io.pylyp.sample.composeapp"
+            packageName = appPackageName
             packageVersion = "1.0.0"
         }
     }

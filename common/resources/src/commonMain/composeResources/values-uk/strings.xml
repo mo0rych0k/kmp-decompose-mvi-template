@@ -31,17 +31,34 @@
     <string name="location_unknown">Локація невідома</string>
     <string name="status_large_difference">Велика різниця</string>
     <string name="label_temperature">Температура</string>
+    <string name="unit_celsius">°C</string>
+    <string name="unit_fahrenheit">°F</string>
     <string name="label_vs">vs</string>
     <string name="label_difference">Різниця</string>
 
     <!-- New observation -->
     <string name="screen_new_observation_title">Нове спостереження</string>
-    <string name="header_now">Зараз</string>
+    <string name="label_place">Місце</string>
     <string name="header_loading">Завантаження…</string>
     <string name="label_wind_direction">Напрямок вітру</string>
+    <string name="label_wind_strength">Сила вітру</string>
     <string name="wind_north">Північ (Пн)</string>
+    <string name="wind_northeast">Північний схід (ПнСх)</string>
+    <string name="wind_east">Схід (Сх)</string>
+    <string name="wind_southeast">Південний схід (ПдСх)</string>
+    <string name="wind_south">Південь (Пд)</string>
+    <string name="wind_southwest">Південний захід (ПдЗх)</string>
+    <string name="wind_west">Захід (Зх)</string>
+    <string name="wind_northwest">Північний захід (ПнЗх)</string>
+    <string name="screen_wind_setup_title">Напрямок і сила вітру</string>
+    <string name="wind_setup_compass_hint">Тримайте пристрій горизонтально. Троянда компаса обертається так, щоб Пн збігався з реальною північчю (коли доступно).</string>
+    <string name="wind_setup_drag_hint">Ведіть пальцем по циферблату, щоб направити стрілку туди, звідки дме вітер.</string>
+    <string name="btn_open_wind_setup">Налаштувати вітер…</string>
+    <string name="wind_heading_unavailable">Немає даних компаса — орієнтуйтесь візуально по циферблату.</string>
+    <string name="wind_azimuth_caption">%1$d° — вітер за азимутом (звідки дме)</string>
     <string name="label_humidity">Вологість</string>
     <string name="label_weather_type">Тип погоди</string>
+    <string name="label_weather">Погода</string>
     <string name="weather_sunny">Сонячно</string>
     <string name="weather_cloudy">Хмарність</string>
     <string name="weather_overcast">Сильна хмарність</string>
@@ -50,12 +67,13 @@
     <string name="label_pressure_short">Тиск</string>
     <string name="unit_mm">мм</string>
     <string name="btn_save_observation">Зберегти спостереження</string>
+    <string name="observation_save_missing_background">Немає координат або еталонної погоди. Дочекайтесь завантаження або відкрийте екран знову.</string>
 
     <!-- Observation details -->
     <string name="screen_details_title">Деталі</string>
     <string name="alert_big_difference">Велика різниця</string>
     <string name="header_my_observations">Мої спостереження</string>
-    <string name="header_api_data">Дані OpenWeather</string>
+    <string name="header_api_data">Дані Open-Meteo</string>
     <string name="label_wind">Вітер</string>
     <string name="label_description">Опис</string>
     <string name="unit_pressure_mm">мм рт. ст.</string>

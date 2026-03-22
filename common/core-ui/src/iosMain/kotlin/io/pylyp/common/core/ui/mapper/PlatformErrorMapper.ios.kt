@@ -1,13 +1,13 @@
 package io.pylyp.common.core.ui.mapper
 
 import io.ktor.client.engine.darwin.DarwinHttpRequestException
-import io.pylyp.common.resources.internal.Res
-import io.pylyp.common.resources.internal.error_network_message
-import io.pylyp.common.resources.internal.error_network_title
-import io.pylyp.common.resources.internal.error_ssl_message
-import io.pylyp.common.resources.internal.error_ssl_title
-import io.pylyp.common.resources.internal.error_timeout_message
-import io.pylyp.common.resources.internal.error_timeout_title
+import io.pylyp.common.resources.Res
+import io.pylyp.common.resources.error_network_message
+import io.pylyp.common.resources.error_network_title
+import io.pylyp.common.resources.error_ssl_message
+import io.pylyp.common.resources.error_ssl_title
+import io.pylyp.common.resources.error_timeout_message
+import io.pylyp.common.resources.error_timeout_title
 import io.pylyp.common.uikit.entity.UiError
 import io.pylyp.common.uikit.entity.resPrintableText
 import platform.Foundation.NSError

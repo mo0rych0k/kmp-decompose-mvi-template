@@ -1,10 +1,10 @@
 package io.pylyp.common.core.ui.mapper
 
-import io.pylyp.common.resources.internal.Res
-import io.pylyp.common.resources.internal.error_generic_message
-import io.pylyp.common.resources.internal.error_generic_title
-import io.pylyp.common.resources.internal.error_serialization_message
-import io.pylyp.common.resources.internal.error_serialization_title
+import io.pylyp.common.resources.Res
+import io.pylyp.common.resources.error_generic_message
+import io.pylyp.common.resources.error_generic_title
+import io.pylyp.common.resources.error_serialization_message
+import io.pylyp.common.resources.error_serialization_title
 import io.pylyp.common.uikit.entity.UiError
 import io.pylyp.common.uikit.entity.rawPrintableText
 import io.pylyp.common.uikit.entity.resPrintableText

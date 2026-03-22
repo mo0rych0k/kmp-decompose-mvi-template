@@ -1,8 +1,8 @@
 package io.pylyp.weather.domain.repository
 
-import io.pylyp.weather.domain.entity.CurrentWeatherDD
-import io.pylyp.weather.domain.entity.WeatherServiceType
+import io.pylyp.weather.domain.entity.CommonWeatherDD
 
 public interface WeatherRepository {
-    public suspend fun getCurrentWeatherKyiv(service: WeatherServiceType): CurrentWeatherDD
+    /** Reference current weather at coordinates via Open-Meteo (SkyTrack verification). */
+    public suspend fun getOpenMeteoCurrentWeather(latitude: Double, longitude: Double): CommonWeatherDD
 }
