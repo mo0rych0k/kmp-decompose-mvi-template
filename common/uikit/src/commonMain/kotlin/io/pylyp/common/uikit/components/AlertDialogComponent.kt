@@ -100,7 +100,7 @@ public fun AlertDialogComponent(
 
 @Preview(device = Devices.PIXEL_3A)
 @Composable
-private fun Preview() {
+internal fun AlertDialogComponentPreview() {
     AppTheme {
         AlertDialogComponent(
             title = "title",

@@ -5,35 +5,52 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.pylyp.common.sharekit.ShareManager
+import io.pylyp.weather.domain.usecase.DeleteWeatherObservationUseCase
 import io.pylyp.weather.domain.usecase.ObserveWeatherObservationLogsUseCase
+import io.pylyp.weather.ui.share.toShareJson
+import io.pylyp.weather.ui.share.toShareJsonArray
+import io.pylyp.weather.ui.skytrack.model.ObservationCalendarDayUi
+import io.pylyp.weather.ui.skytrack.model.isInLocalDay
+import io.pylyp.weather.ui.skytrack.model.isSameDayAs
+import io.pylyp.weather.ui.skytrack.model.toWeatherObservationRecordUi
+import io.pylyp.weather.ui.skytrack.model.todayObservationCalendarDayUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 
 internal class SkyTrackHistoryStoreFactory(
     private val factory: StoreFactory,
     private val observeLogsUseCase: ObserveWeatherObservationLogsUseCase,
+    private val deleteUseCase: DeleteWeatherObservationUseCase,
+    private val shareManager: ShareManager,
+    private val initialSelectedDay: ObservationCalendarDayUi?,
 ) {
 
-    fun create(): SkyTrackHistoryStore =
-        object : SkyTrackHistoryStore,
+    fun create(): SkyTrackHistoryStore {
+        val selectedDay = initialSelectedDay ?: todayObservationCalendarDayUi()
+        return object : SkyTrackHistoryStore,
             Store<SkyTrackHistoryStore.Intent, SkyTrackHistoryStore.State, SkyTrackHistoryStore.Label> by factory.create(
                 name = "SkyTrackHistoryStore",
-                initialState = SkyTrackHistoryStore.State(),
+                initialState = SkyTrackHistoryStore.State(selectedDay = selectedDay),
                 bootstrapper = BootstrapperImpl(),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
+    }
 
     private sealed interface Action {
         data object SubscribeAction : Action
     }
 
     private sealed interface Message {
-        data class RecordsMessage(val records: List<io.pylyp.weather.domain.entity.WeatherObservationRecordDD>) :
-            Message
+        data class RecordsMessage(
+            val totalObservationsInDatabase: Int,
+            val records: List<io.pylyp.weather.ui.skytrack.model.WeatherObservationRecordUi>,
+        ) : Message
 
         data class LoadingMessage(val isLoading: Boolean) : Message
     }
@@ -57,10 +74,41 @@ internal class SkyTrackHistoryStoreFactory(
 
         override fun executeIntent(intent: SkyTrackHistoryStore.Intent) {
             when (intent) {
-                SkyTrackHistoryStore.Intent.BackIntent -> publish(SkyTrackHistoryStore.Label.BackLabel)
+                SkyTrackHistoryStore.Intent.BackIntent -> {
+                    val today = todayObservationCalendarDayUi()
+                    if (state().selectedDay.isSameDayAs(today)) {
+                        publish(SkyTrackHistoryStore.Label.BackLabel)
+                    } else {
+                        publish(
+                            SkyTrackHistoryStore.Label.OpenCalendarLabel(
+                                focusDay = state().selectedDay,
+                            ),
+                        )
+                    }
+                }
                 SkyTrackHistoryStore.Intent.OpenAddIntent -> publish(SkyTrackHistoryStore.Label.OpenAddLabel)
+                SkyTrackHistoryStore.Intent.GoToTodayIntent ->
+                    publish(SkyTrackHistoryStore.Label.GoToTodayLabel(today = todayObservationCalendarDayUi()))
+                SkyTrackHistoryStore.Intent.OpenCalendarIntent ->
+                    publish(SkyTrackHistoryStore.Label.OpenCalendarLabel(focusDay = state().selectedDay))
                 is SkyTrackHistoryStore.Intent.OpenDetailsIntent ->
                     publish(SkyTrackHistoryStore.Label.OpenDetailsLabel(recordId = intent.recordId))
+                is SkyTrackHistoryStore.Intent.DeleteRecordIntent -> scope.launch {
+                    deleteUseCase(intent.recordId).collect { }
+                }
+
+                is SkyTrackHistoryStore.Intent.ShareRecordIntent -> {
+                    val json = intent.record.toShareJson()
+                    shareManager.shareText(json)
+                }
+
+                SkyTrackHistoryStore.Intent.ShareDayIntent -> {
+                    val records = state().records
+                    if (records.isNotEmpty()) {
+                        val json = records.toShareJsonArray()
+                        shareManager.shareText(json)
+                    }
+                }
             }
         }
 
@@ -78,11 +126,18 @@ internal class SkyTrackHistoryStoreFactory(
                 }
                 .catch {
                     dispatch(Message.LoadingMessage(isLoading = false))
-                    dispatch(Message.RecordsMessage(records = emptyList()))
+                    dispatch(Message.RecordsMessage(totalObservationsInDatabase = 0, records = emptyList()))
                 }
                 .onEach { list ->
+                    val day = state().selectedDay
+                    val filtered = list.filter { it.isInLocalDay(day) }.map { it.toWeatherObservationRecordUi() }
                     dispatch(Message.LoadingMessage(isLoading = false))
-                    dispatch(Message.RecordsMessage(records = list))
+                    dispatch(
+                        Message.RecordsMessage(
+                            totalObservationsInDatabase = list.size,
+                            records = filtered,
+                        ),
+                    )
                 }
                 .launchIn(scope)
         }
@@ -92,7 +147,11 @@ internal class SkyTrackHistoryStoreFactory(
         override fun SkyTrackHistoryStore.State.reduce(msg: Message): SkyTrackHistoryStore.State {
             return when (msg) {
                 is Message.LoadingMessage -> copy(isLoading = msg.isLoading)
-                is Message.RecordsMessage -> copy(records = msg.records)
+                is Message.RecordsMessage ->
+                    copy(
+                        records = msg.records,
+                        totalObservationsInDatabase = msg.totalObservationsInDatabase,
+                    )
             }
         }
     }

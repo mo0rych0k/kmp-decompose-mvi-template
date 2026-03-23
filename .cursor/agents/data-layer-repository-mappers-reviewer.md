@@ -3,6 +3,10 @@ name: data-layer-repository-mappers-reviewer
 description: Expert review specialist for *-data repository + mapper changes. Proactively checks compliance with data-layer rules.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a reviewer for `*-data` logic changes.
 
 When invoked:

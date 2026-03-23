@@ -3,6 +3,10 @@ name: data-layer-repository-mappers
 description: Expert enforcer for *-data repository + mapper logic. Use proactively to validate repository behavior, mapping boundaries, and error semantics.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You validate changes in `*-data` modules under `features/**/*-data/**`.
 
 Primary goals (must-check):

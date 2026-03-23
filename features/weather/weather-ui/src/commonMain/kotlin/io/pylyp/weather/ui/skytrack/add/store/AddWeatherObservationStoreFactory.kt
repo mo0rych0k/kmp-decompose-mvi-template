@@ -7,13 +7,23 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.pylyp.common.core.foundation.entity.Resource
 import io.pylyp.weather.domain.entity.SkyTrackBackgroundWeather
-import io.pylyp.weather.domain.location.PlaceLabelProvider
-import io.pylyp.weather.domain.usecase.LoadSkyTrackBackgroundWeatherUseCase
 import io.pylyp.weather.domain.entity.toCenterBearingDegrees
 import io.pylyp.weather.domain.entity.toWindDirectionDD
+import io.pylyp.weather.domain.location.PlaceLabelProvider
+import io.pylyp.weather.domain.usecase.LoadSkyTrackBackgroundWeatherUseCase
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationParams
-import io.pylyp.weather.ui.skytrack.add.store.TemperatureUnit
 import io.pylyp.weather.domain.usecase.SaveWeatherObservationUseCase
+import io.pylyp.weather.ui.skytrack.add.cloudinessTypes
+import io.pylyp.weather.ui.skytrack.model.CommonWeatherUi
+import io.pylyp.weather.ui.skytrack.model.GeoCoordinatesUi
+import io.pylyp.weather.ui.skytrack.model.WeatherTypeUi
+import io.pylyp.weather.ui.skytrack.model.toCommonWeatherDD
+import io.pylyp.weather.ui.skytrack.model.toCommonWeatherUi
+import io.pylyp.weather.ui.skytrack.model.toGeoCoordinatesDD
+import io.pylyp.weather.ui.skytrack.model.toGeoCoordinatesUi
+import io.pylyp.weather.ui.skytrack.model.toWeatherTypeDD
+import io.pylyp.weather.ui.skytrack.model.toWindDirectionDomain
+import io.pylyp.weather.ui.skytrack.model.toWindDirectionUi
 import kotlinx.coroutines.launch
 
 internal class AddWeatherObservationStoreFactory(
@@ -39,8 +49,8 @@ internal class AddWeatherObservationStoreFactory(
 
     private sealed interface Message {
         data class BackgroundLoadedMessage(
-            val coordinates: io.pylyp.weather.domain.entity.GeoCoordinatesDD,
-            val api: io.pylyp.weather.domain.entity.CommonWeatherDD,
+            val coordinates: GeoCoordinatesUi,
+            val api: CommonWeatherUi,
         ) : Message
 
         data class BackgroundFailedMessage(val message: String) : Message
@@ -49,7 +59,7 @@ internal class AddWeatherObservationStoreFactory(
         data class TemperatureMessage(val value: Double) : Message
         data class WindStrengthMessage(val value: Int) : Message
         data class WindDirectionDegreesMessage(val degrees: Float) : Message
-        data class WeatherTypeToggledMessage(val value: io.pylyp.weather.domain.entity.WeatherTypeDD) : Message
+        data class WeatherTypeToggledMessage(val value: WeatherTypeUi) : Message
         data object OpenWindSetupMessage : Message
         data object CloseWindSetupMessage : Message
         data object TemperatureUnitToggledMessage : Message
@@ -120,8 +130,8 @@ internal class AddWeatherObservationStoreFactory(
                             val coords = resource.data.coordinates
                             dispatch(
                                 Message.BackgroundLoadedMessage(
-                                    coordinates = coords,
-                                    api = resource.data.apiWeather,
+                                    coordinates = coords.toGeoCoordinatesUi(),
+                                    api = resource.data.apiWeather.toCommonWeatherUi(),
                                 ),
                             )
                             dispatch(Message.LoadingBackgroundMessage(isLoading = false))
@@ -159,13 +169,13 @@ internal class AddWeatherObservationStoreFactory(
                 dispatch(Message.SavingMessage(isSaving = true))
                 saveWeatherObservationUseCase(
                     SaveWeatherObservationParams(
-                        coordinates = coords,
+                        coordinates = coords.toGeoCoordinatesDD(),
                         locationLabel = state.locationLabel,
                         userTemperatureC = state.userTemperatureC,
-                        userWindDirection = state.userWindDirection,
+                        userWindDirection = state.userWindDirection.toWindDirectionDomain(),
                         userWindStrengthPercent = state.userWindStrengthPercent,
-                        userWeatherTypes = state.userWeatherTypes,
-                        apiWeather = api,
+                        userWeatherTypes = state.userWeatherTypes.map { it.toWeatherTypeDD() }.toSet(),
+                        apiWeather = api.toCommonWeatherDD(),
                     ),
                 ).collect { resource ->
                     when (resource) {
@@ -212,13 +222,13 @@ internal class AddWeatherObservationStoreFactory(
                 is Message.WindDirectionDegreesMessage ->
                     copy(
                         windDirectionDegrees = msg.degrees,
-                        userWindDirection = msg.degrees.toWindDirectionDD(),
+                        userWindDirection = msg.degrees.toWindDirectionDD().toWindDirectionUi(),
                     )
 
                 is Message.OpenWindSetupMessage ->
                     copy(
                         isWindSetupVisible = true,
-                        windDirectionDegrees = userWindDirection.toCenterBearingDegrees(),
+                        windDirectionDegrees = userWindDirection.toWindDirectionDomain().toCenterBearingDegrees(),
                     )
 
                 is Message.CloseWindSetupMessage -> copy(isWindSetupVisible = false)
@@ -230,12 +240,18 @@ internal class AddWeatherObservationStoreFactory(
                 )
 
                 is Message.WeatherTypeToggledMessage -> {
-                    val next = if (msg.value in userWeatherTypes) {
-                        if (userWeatherTypes.size > 1) userWeatherTypes - msg.value else userWeatherTypes
+                    val v = msg.value
+                    if (v in cloudinessTypes) {
+                        val withoutCloudiness = userWeatherTypes - cloudinessTypes.toSet()
+                        copy(userWeatherTypes = withoutCloudiness + v)
                     } else {
-                        userWeatherTypes + msg.value
+                        val next = if (v in userWeatherTypes) {
+                            userWeatherTypes - v
+                        } else {
+                            userWeatherTypes + v
+                        }
+                        copy(userWeatherTypes = next)
                     }
-                    copy(userWeatherTypes = next)
                 }
                 is Message.SavingMessage ->
                     copy(

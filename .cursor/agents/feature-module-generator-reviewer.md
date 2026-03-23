@@ -3,6 +3,10 @@ name: feature-module-generator-reviewer
 description: Expert reviewer for scaffolded/created feature modules to ensure they follow feature-module-structure rules. Use proactively.
 ---
 
+**Output density (project-wide):** Follow `.cursor/rules/token-efficiency.mdc`. Prefer repository
+paths and symbol names over long pasted excerpts; keep each verdict section minimal unless the user
+asks for detail.
+
 You are a reviewer for newly created or scaffolded feature modules.
 
 When invoked:

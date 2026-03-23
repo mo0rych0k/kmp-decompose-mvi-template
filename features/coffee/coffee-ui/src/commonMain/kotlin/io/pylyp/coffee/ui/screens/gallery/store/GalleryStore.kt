@@ -1,5 +1,6 @@
 package io.pylyp.coffee.ui.screens.gallery.store
 
+import androidx.compose.runtime.Immutable
 import com.arkivanov.mvikotlin.core.store.Store
 import io.pylyp.coffee.ui.screens.gallery.entity.CoffeeImageUiData
 import io.pylyp.coffee.ui.screens.gallery.entity.DialogUiData
@@ -14,6 +15,7 @@ internal interface GalleryStore :
         data object CloseDialogIntent : Intent
     }
 
+    @Immutable
     data class State(
         val isLoading: Boolean = false,
         val images: List<CoffeeImageUiData> = emptyList(),
