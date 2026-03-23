@@ -1,5 +1,6 @@
 package io.pylyp.weather.ui.skytrack.calendar.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.pylyp.common.uikit.AppTheme
 import io.pylyp.weather.ui.skytrack.model.ObservationCalendarDayUi
+import io.pylyp.weather.ui.skytrack.model.isAfter
+import io.pylyp.weather.ui.skytrack.model.isBefore
+import io.pylyp.weather.ui.skytrack.model.isSameDayAs
 import io.pylyp.weather.ui.skytrack.model.lastDayOfMonth
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -41,6 +45,7 @@ internal data class ObservationCalendarGridUi(
     val monthNumber: Int,
     val countsByDay: Map<Int, Int>,
     val focusDay: ObservationCalendarDayUi,
+    val today: ObservationCalendarDayUi,
 )
 
 @Composable
@@ -51,6 +56,7 @@ internal fun ObservationCalendarGridComponent(
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     onDayClick: (Int) -> Unit,
+    onEmptyPastDateTapped: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val first = LocalDate(grid.year, grid.monthNumber, 1)
@@ -111,16 +117,36 @@ internal fun ObservationCalendarGridComponent(
                         Box(modifier = Modifier.weight(1f).aspectRatio(1f))
                     } else {
                         val count = grid.countsByDay[dayNumber] ?: 0
+                        val cellDay = ObservationCalendarDayUi(
+                            year = grid.year,
+                            monthNumber = grid.monthNumber,
+                            dayOfMonth = dayNumber,
+                        )
                         val isHighlighted =
                             grid.focusDay.year == grid.year &&
                                 grid.focusDay.monthNumber == grid.monthNumber &&
                                 grid.focusDay.dayOfMonth == dayNumber
+                        val isToday = cellDay.isSameDayAs(grid.today)
+                        val isFuture = cellDay.isAfter(grid.today)
+                        val isPast = cellDay.isBefore(grid.today)
+                        val isEmptyPastDate = isPast && count == 0
                         DayCell(
                             modifier = Modifier.weight(1f),
                             dayOfMonth = dayNumber,
                             count = count,
                             isHighlighted = isHighlighted,
-                            onClick = { onDayClick(dayNumber) },
+                            isToday = isToday,
+                            isFuture = isFuture,
+                            isEmptyPastDate = isEmptyPastDate,
+                            onClick = {
+                                when {
+                                    isFuture -> {}
+                                    isEmptyPastDate -> onEmptyPastDateTapped.invoke()
+                                    else -> {
+                                        onDayClick(dayNumber)
+                                    }
+                                }
+                            },
                         )
                     }
                 }
@@ -136,23 +162,31 @@ private fun DayCell(
     dayOfMonth: Int,
     count: Int,
     isHighlighted: Boolean,
+    isToday: Boolean,
+    isFuture: Boolean,
+    isEmptyPastDate: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(10.dp)
     val bg =
-        if (isHighlighted) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+        when {
+            isFuture -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+            isEmptyPastDate -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
+            isHighlighted -> MaterialTheme.colorScheme.primaryContainer
+            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
         }
+    val todayBorder =
+        if (isToday) BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        else null
     Surface(
         modifier = modifier
             .aspectRatio(1f)
             .clip(shape)
-            .clickable(onClick = onClick),
+            .clickable(enabled = !isFuture, onClick = onClick),
         color = bg,
         shape = shape,
+        border = todayBorder,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -186,6 +220,7 @@ internal fun ObservationCalendarGridComponentPreview() {
                 monthNumber = 3,
                 countsByDay = mapOf(1 to 2, 15 to 5, 22 to 1),
                 focusDay = ObservationCalendarDayUi(2025, 3, 22),
+                today = ObservationCalendarDayUi(2025, 3, 23),
             ),
             onPreviousMonth = {},
             onNextMonth = {},

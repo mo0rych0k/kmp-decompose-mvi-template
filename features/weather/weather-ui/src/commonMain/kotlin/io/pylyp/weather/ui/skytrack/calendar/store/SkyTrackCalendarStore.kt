@@ -25,6 +25,7 @@ internal interface SkyTrackCalendarStore :
 
     sealed interface Label {
         data object BackLabel : Label
+        data class GoToTodayLabel(val today: ObservationCalendarDayUi) : Label
         data class DaySelectedLabel(val day: ObservationCalendarDayUi) : Label
     }
 }

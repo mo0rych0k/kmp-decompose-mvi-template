@@ -15,11 +15,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -27,12 +30,15 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.pylyp.common.resources.Res
 import io.pylyp.common.resources.action_share
+import io.pylyp.common.resources.msg_no_records_for_date
 import io.pylyp.common.resources.observation_calendar_month_subtitle
 import io.pylyp.common.resources.observation_calendar_title
 import io.pylyp.weather.ui.skytrack.calendar.components.ObservationCalendarGridComponent
 import io.pylyp.weather.ui.skytrack.calendar.components.ObservationCalendarGridUi
 import io.pylyp.weather.ui.skytrack.calendar.store.SkyTrackCalendarStore
+import io.pylyp.weather.ui.skytrack.model.todayObservationCalendarDayUi
 import org.jetbrains.compose.resources.stringResource
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +48,8 @@ internal fun SkyTrackCalendarScreen(
     modifier: Modifier = Modifier,
 ) {
     val state by component.state.subscribeAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val monthTitle = remember(state.visibleYear, state.visibleMonth) {
         val d = LocalDate(state.visibleYear, state.visibleMonth, 1)
         val mn = d.month.name
@@ -51,6 +59,7 @@ internal fun SkyTrackCalendarScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -86,6 +95,7 @@ internal fun SkyTrackCalendarScreen(
             if (state.isLoading && state.countsByDay.isEmpty()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
+                val text = stringResource(Res.string.msg_no_records_for_date)
                 ObservationCalendarGridComponent(
                     monthTitle = monthTitle,
                     monthSubtitle = stringResource(Res.string.observation_calendar_month_subtitle),
@@ -94,6 +104,7 @@ internal fun SkyTrackCalendarScreen(
                         monthNumber = state.visibleMonth,
                         countsByDay = state.countsByDay,
                         focusDay = state.focusDay,
+                        today = remember { todayObservationCalendarDayUi() },
                     ),
                     onPreviousMonth = {
                         component.onIntent(SkyTrackCalendarStore.Intent.PreviousMonthIntent)
@@ -103,6 +114,14 @@ internal fun SkyTrackCalendarScreen(
                     },
                     onDayClick = { day ->
                         component.onIntent(SkyTrackCalendarStore.Intent.SelectDayIntent(dayOfMonth = day))
+                    },
+                    onEmptyPastDateTapped = {
+
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = text,
+                            )
+                        }
                     },
                     modifier = Modifier
                         .fillMaxSize()

@@ -71,6 +71,15 @@ internal class DefaultSkyTrackRootComponent(
                         when (output) {
                             DefaultSkyTrackHistoryComponent.Output.Finished -> onFinished()
                             DefaultSkyTrackHistoryComponent.Output.OpenAdd -> navigation.push(Config.Add)
+                            is DefaultSkyTrackHistoryComponent.Output.GoToToday -> navigation.navigate {
+                                listOf(
+                                    Config.History(
+                                        year = output.today.year,
+                                        month = output.today.monthNumber,
+                                        day = output.today.dayOfMonth,
+                                    ),
+                                )
+                            }
                             is DefaultSkyTrackHistoryComponent.Output.OpenCalendar -> {
                                 val d = output.focusDay
                                 navigation.push(
@@ -104,6 +113,18 @@ internal class DefaultSkyTrackRootComponent(
                     output = { output ->
                         when (output) {
                             DefaultSkyTrackCalendarComponent.Output.Finished -> navigation.pop()
+                            is DefaultSkyTrackCalendarComponent.Output.GoToToday -> {
+                                val d = output.today
+                                navigation.navigate {
+                                    listOf(
+                                        Config.History(
+                                            year = d.year,
+                                            month = d.monthNumber,
+                                            day = d.dayOfMonth,
+                                        ),
+                                    )
+                                }
+                            }
                             is DefaultSkyTrackCalendarComponent.Output.DaySelected -> {
                                 val d = output.day
                                 navigation.navigate {

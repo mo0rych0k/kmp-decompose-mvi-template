@@ -28,6 +28,18 @@ internal fun todayObservationCalendarDayUi(): ObservationCalendarDayUi {
 internal fun ObservationCalendarDayUi.toLocalDate(): LocalDate =
     LocalDate(year = year, month = monthNumber, day = dayOfMonth)
 
+/** True if this day is after today (future date). */
+internal fun ObservationCalendarDayUi.isAfter(today: ObservationCalendarDayUi): Boolean =
+    toLocalDate() > today.toLocalDate()
+
+/** True if this day is before today (past date). */
+internal fun ObservationCalendarDayUi.isBefore(today: ObservationCalendarDayUi): Boolean =
+    toLocalDate() < today.toLocalDate()
+
+/** True if this day equals today. */
+internal fun ObservationCalendarDayUi.isSameDayAs(today: ObservationCalendarDayUi): Boolean =
+    year == today.year && monthNumber == today.monthNumber && dayOfMonth == today.dayOfMonth
+
 internal fun dayEpochMillisRangeExclusive(day: ObservationCalendarDayUi): LongRange {
     val tz = TimeZone.currentSystemDefault()
     val start = day.toLocalDate().atStartOfDayIn(tz)

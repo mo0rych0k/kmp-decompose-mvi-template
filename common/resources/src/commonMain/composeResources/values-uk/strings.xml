@@ -32,6 +32,9 @@
     <string name="observation_calendar_title">Календар</string>
     <string name="observation_calendar_month_subtitle">Кількість спостережень за день</string>
     <string name="nav_calendar">Календар</string>
+    <string name="btn_add_record">Додати запис</string>
+    <string name="btn_go_to_today">Перейти до сьогодні</string>
+    <string name="msg_no_records_for_date">У цю дату нічого немає</string>
     <string name="location_unknown">Локація невідома</string>
     <string name="status_large_difference">Велика різниця</string>
     <string name="label_temperature">Температура</string>

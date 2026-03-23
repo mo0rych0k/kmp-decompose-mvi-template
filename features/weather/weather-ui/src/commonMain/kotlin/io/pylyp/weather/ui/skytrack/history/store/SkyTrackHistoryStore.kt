@@ -10,6 +10,7 @@ internal interface SkyTrackHistoryStore :
     sealed interface Intent {
         data object BackIntent : Intent
         data object OpenAddIntent : Intent
+        data object GoToTodayIntent : Intent
         data object OpenCalendarIntent : Intent
         data class OpenDetailsIntent(val recordId: Long) : Intent
         data class DeleteRecordIntent(val recordId: Long) : Intent
@@ -28,6 +29,7 @@ internal interface SkyTrackHistoryStore :
     sealed interface Label {
         data object BackLabel : Label
         data object OpenAddLabel : Label
+        data class GoToTodayLabel(val today: ObservationCalendarDayUi) : Label
         data class OpenCalendarLabel(val focusDay: ObservationCalendarDayUi) : Label
         data class OpenDetailsLabel(val recordId: Long) : Label
     }

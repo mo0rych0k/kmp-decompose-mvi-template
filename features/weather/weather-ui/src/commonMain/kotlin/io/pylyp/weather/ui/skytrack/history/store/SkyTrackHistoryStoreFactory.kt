@@ -12,6 +12,7 @@ import io.pylyp.weather.ui.share.toShareJson
 import io.pylyp.weather.ui.share.toShareJsonArray
 import io.pylyp.weather.ui.skytrack.model.ObservationCalendarDayUi
 import io.pylyp.weather.ui.skytrack.model.isInLocalDay
+import io.pylyp.weather.ui.skytrack.model.isSameDayAs
 import io.pylyp.weather.ui.skytrack.model.toWeatherObservationRecordUi
 import io.pylyp.weather.ui.skytrack.model.todayObservationCalendarDayUi
 import kotlinx.coroutines.Job
@@ -73,8 +74,21 @@ internal class SkyTrackHistoryStoreFactory(
 
         override fun executeIntent(intent: SkyTrackHistoryStore.Intent) {
             when (intent) {
-                SkyTrackHistoryStore.Intent.BackIntent -> publish(SkyTrackHistoryStore.Label.BackLabel)
+                SkyTrackHistoryStore.Intent.BackIntent -> {
+                    val today = todayObservationCalendarDayUi()
+                    if (state().selectedDay.isSameDayAs(today)) {
+                        publish(SkyTrackHistoryStore.Label.BackLabel)
+                    } else {
+                        publish(
+                            SkyTrackHistoryStore.Label.OpenCalendarLabel(
+                                focusDay = state().selectedDay,
+                            ),
+                        )
+                    }
+                }
                 SkyTrackHistoryStore.Intent.OpenAddIntent -> publish(SkyTrackHistoryStore.Label.OpenAddLabel)
+                SkyTrackHistoryStore.Intent.GoToTodayIntent ->
+                    publish(SkyTrackHistoryStore.Label.GoToTodayLabel(today = todayObservationCalendarDayUi()))
                 SkyTrackHistoryStore.Intent.OpenCalendarIntent ->
                     publish(SkyTrackHistoryStore.Label.OpenCalendarLabel(focusDay = state().selectedDay))
                 is SkyTrackHistoryStore.Intent.OpenDetailsIntent ->

@@ -2,6 +2,7 @@ package io.pylyp.weather.ui.skytrack.calendar
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import io.pylyp.common.core.di.ComponentFactory
@@ -39,11 +40,20 @@ internal class DefaultSkyTrackCalendarComponent(
 
     override val state: Value<SkyTrackCalendarStore.State> = store.asValue()
 
+    private val backCallback = BackCallback {
+        store.accept(SkyTrackCalendarStore.Intent.BackIntent)
+    }
+
     init {
+        backHandler.register(backCallback)
         store.subscribe(scope = componentScope) { label ->
             when (label) {
                 SkyTrackCalendarStore.Label.BackLabel -> output(Output.Finished)
-                is SkyTrackCalendarStore.Label.DaySelectedLabel -> output(Output.DaySelected(day = label.day))
+                is SkyTrackCalendarStore.Label.GoToTodayLabel ->
+                    output(Output.GoToToday(today = label.today))
+
+                is SkyTrackCalendarStore.Label.DaySelectedLabel ->
+                    output(Output.DaySelected(day = label.day))
             }
         }
     }
@@ -54,6 +64,7 @@ internal class DefaultSkyTrackCalendarComponent(
 
     sealed interface Output {
         data object Finished : Output
+        data class GoToToday(val today: ObservationCalendarDayUi) : Output
         data class DaySelected(val day: ObservationCalendarDayUi) : Output
     }
 }

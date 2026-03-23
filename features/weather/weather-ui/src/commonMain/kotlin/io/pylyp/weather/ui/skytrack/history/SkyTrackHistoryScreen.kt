@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -35,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import io.pylyp.common.resources.Res
 import io.pylyp.common.resources.action_share
+import io.pylyp.common.resources.btn_add_record
+import io.pylyp.common.resources.btn_go_to_today
 import io.pylyp.common.resources.nav_calendar
 import io.pylyp.common.resources.observation_empty_description
 import io.pylyp.common.resources.observation_empty_for_day_description
@@ -45,6 +48,8 @@ import io.pylyp.common.uikit.AppColors
 import io.pylyp.weather.ui.skytrack.history.components.ObservationListItemComponent
 import io.pylyp.weather.ui.skytrack.history.store.SkyTrackHistoryStore
 import io.pylyp.weather.ui.skytrack.model.formatObservationDayIso
+import io.pylyp.weather.ui.skytrack.model.isSameDayAs
+import io.pylyp.weather.ui.skytrack.model.todayObservationCalendarDayUi
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +59,10 @@ internal fun SkyTrackHistoryScreen(
     modifier: Modifier = Modifier,
 ) {
     val state by component.state.subscribeAsState()
+    val today = remember { todayObservationCalendarDayUi() }
+    val isSelectedDayToday = remember(state.selectedDay, today) {
+        state.selectedDay.isSameDayAs(today)
+    }
     val selectedDayLabel = remember(state.selectedDay) {
         formatObservationDayIso(state.selectedDay)
     }
@@ -106,11 +115,28 @@ internal fun SkyTrackHistoryScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { component.onIntent(SkyTrackHistoryStore.Intent.OpenAddIntent) },
-                containerColor = AppColors.primary,
-            ) {
-                Icon(Icons.Default.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+            if (isSelectedDayToday) {
+                FloatingActionButton(
+                    onClick = { component.onIntent(SkyTrackHistoryStore.Intent.OpenAddIntent) },
+                    containerColor = AppColors.primary,
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = stringResource(Res.string.btn_add_record),
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            } else {
+                FloatingActionButton(
+                    onClick = { component.onIntent(SkyTrackHistoryStore.Intent.GoToTodayIntent) },
+                    containerColor = AppColors.primary,
+                ) {
+                    Icon(
+                        Icons.Default.Today,
+                        contentDescription = stringResource(Res.string.btn_go_to_today),
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
         },
     ) { padding ->

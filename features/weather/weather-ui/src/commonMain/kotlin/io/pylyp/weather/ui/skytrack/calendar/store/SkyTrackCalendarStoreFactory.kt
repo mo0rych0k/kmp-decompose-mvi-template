@@ -13,6 +13,7 @@ import io.pylyp.weather.ui.skytrack.model.ObservationCalendarDayUi
 import io.pylyp.weather.ui.skytrack.model.countObservationsByDayOfMonth
 import io.pylyp.weather.ui.skytrack.model.shiftMonth
 import io.pylyp.weather.ui.skytrack.model.toWeatherObservationRecordUi
+import io.pylyp.weather.ui.skytrack.model.todayObservationCalendarDayUi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -74,7 +75,8 @@ internal class SkyTrackCalendarStoreFactory(
 
         override fun executeIntent(intent: SkyTrackCalendarStore.Intent) {
             when (intent) {
-                SkyTrackCalendarStore.Intent.BackIntent -> publish(SkyTrackCalendarStore.Label.BackLabel)
+                SkyTrackCalendarStore.Intent.BackIntent ->
+                    publish(SkyTrackCalendarStore.Label.GoToTodayLabel(today = todayObservationCalendarDayUi()))
                 SkyTrackCalendarStore.Intent.PreviousMonthIntent -> {
                     val s = state()
                     val (y, m) = shiftMonth(s.visibleYear, s.visibleMonth, -1)

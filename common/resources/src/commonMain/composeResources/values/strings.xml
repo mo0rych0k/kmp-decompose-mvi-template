@@ -32,6 +32,9 @@
     <string name="observation_calendar_title">Calendar</string>
     <string name="observation_calendar_month_subtitle">Observations per day</string>
     <string name="nav_calendar">Calendar</string>
+    <string name="btn_add_record">Add record</string>
+    <string name="btn_go_to_today">Go to today</string>
+    <string name="msg_no_records_for_date">No records for this date</string>
     <string name="location_unknown">Location unknown</string>
     <string name="status_large_difference">Large difference</string>
     <string name="label_temperature">Temperature</string>
