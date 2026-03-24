@@ -75,6 +75,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = appPackageName
             packageVersion = "1.0.0"
+            macOS {
+                iconFile.set(project.file("../media/appicon/MacOsIcon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("../media/appicon/WindowsIcon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("../media/appicon/LinuxIcon.png"))
+            }
         }
     }
 }
