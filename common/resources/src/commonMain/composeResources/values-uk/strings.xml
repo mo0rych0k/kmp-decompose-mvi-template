@@ -134,4 +134,14 @@
     <string name="info_comparison_wind_body">Ваш напрямок і сила вітру проти текстового опису з API.</string>
     <string name="info_comparison_weather_title">Порівняння погоди</string>
     <string name="info_comparison_weather_body">Обрані іконки умов неба проти короткого опису з API.</string>
+
+    <!-- Weather check-in notifications -->
+    <string name="weather_notification_title">Перевірка погоди</string>
+    <string name="weather_notification_question_1">Яка зараз погода?</string>
+    <string name="weather_notification_question_2">Як сьогодні виглядає погода?</string>
+    <string name="weather_notification_question_3">Швидка перевірка — що на вулиці?</string>
+    <string name="weather_notification_question_4">Що зараз з погодою?</string>
+    <string name="weather_notification_question_5">Сонячно, дощ чи щось між тим — що там на вулиці?</string>
+    <string name="weather_notification_question_6">Яка погода у вас зараз?</string>
+    <string name="weather_notification_question_7">Як сьогодні відчувається погода?</string>
 </resources>

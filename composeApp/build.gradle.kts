@@ -25,7 +25,8 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.work.runtime.ktx)
         }
         commonMain.dependencies {
             /*common*/
@@ -37,6 +38,8 @@ kotlin {
             implementation(projects.common.coreThreading)
             implementation(projects.common.persistence.persistenceDatabase)
             implementation(projects.common.shareKit)
+            implementation(projects.common.resources)
+            implementation(libs.kotlinx.datetime)
 
             /*feature-cover*/
             implementation(projects.features.cover.coverUi)

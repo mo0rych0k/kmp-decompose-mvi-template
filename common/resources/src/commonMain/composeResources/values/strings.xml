@@ -134,4 +134,14 @@
     <string name="info_comparison_wind_body">Your wind direction and strength vs the textual API wind description.</string>
     <string name="info_comparison_weather_title">Weather comparison</string>
     <string name="info_comparison_weather_body">Icons you selected for sky conditions vs the API summary.</string>
+
+    <!-- Weather check-in notifications -->
+    <string name="weather_notification_title">Weather check-in</string>
+    <string name="weather_notification_question_1">What\'s the weather like right now?</string>
+    <string name="weather_notification_question_2">How\'s the weather looking today?</string>
+    <string name="weather_notification_question_3">Quick check — what\'s it like outside?</string>
+    <string name="weather_notification_question_4">What\'s the weather doing at the moment?</string>
+    <string name="weather_notification_question_5">Sunny, rainy, or in between — what\'s it like out there?</string>
+    <string name="weather_notification_question_6">What\'s the weather like where you are?</string>
+    <string name="weather_notification_question_7">How does the weather feel today?</string>
 </resources>
